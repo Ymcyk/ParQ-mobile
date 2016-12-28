@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ParQ</string>
+    <!-- activity_login -->
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+</resources>
