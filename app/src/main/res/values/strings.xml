@@ -4,4 +4,27 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+    <!-- activity_menu -->
+    <string-array name="options">
+        <item>Your profile</item>
+        <item>Tickets</item>
+        <item>Vehicles</item>
+        <item>Logout</item>
+    </string-array>
+    <string name="title_activity_confirmation">ConfirmationActivity</string>
+    <!-- activity_profile -->
+    <string name="email">email</string>
+    <string name="wallet">wallet</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="pay_now">Pay now</string>
+    <!-- fragment_type_url -->
+    <string name="type_url">Type URL</string>
+    <string name="ok">OK</string>
+    <!-- ParQ API URL -->
+    <string name="url_login">api-token-auth/</string>
+    <string name="url_current">current/</string>
+    <string name="url_tickets">tickets/</string>
+    <!-- SharedPreferences -->
+    <string name="sharedpref_file_key">org.parq.parqofficer.sharedpref</string>
+    <string name="sharedpref_url_slug">url</string>
 </resources>
