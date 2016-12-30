@@ -1,7 +1,5 @@
 package com.parq.parq.connection;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -11,9 +9,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.parq.parq.App;
-import com.parq.parq.LoginActivity;
 import com.parq.parq.ProfileActivity;
-import com.parq.parq.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,14 +21,10 @@ import java.util.Map;
  * Created by piotr on 29.12.16.
  */
 
-public class ProfileActivityAPI {
+public class ProfileAPI {
         private ProfileActivity profileActivity;
 
-        public final static int PARSE_ERROR = 0;
-        public final static int CONNECTION_ERROR = 1;
-        public final static int BAD_TOKEN = 2;
-
-        public ProfileActivityAPI(ProfileActivity profileActivity){
+        public ProfileAPI(ProfileActivity profileActivity){
             this.profileActivity = profileActivity;
         }
 
@@ -55,7 +47,7 @@ public class ProfileActivityAPI {
                             } catch (JSONException e) {
                                 Log.d("Profile", "JSON parse error");
                                 e.printStackTrace();
-                                profileActivity.connectionError(PARSE_ERROR);
+                                profileActivity.connectionError(App.PARSE_ERROR);
                             }
                         }
                     },
@@ -65,21 +57,21 @@ public class ProfileActivityAPI {
 
                             if(error.networkResponse != null){
                                 if(error.networkResponse.statusCode == 401) {
-                                    profileActivity.connectionError(BAD_TOKEN);
+                                    profileActivity.connectionError(App.UNAUTHENTICATED);
                                     Log.i("Profile", "Bad token 401");
                                 }
                             }
 
                             error.printStackTrace();
                             Log.d("Login", "Connection error");
-                            profileActivity.connectionError(CONNECTION_ERROR);
+                            profileActivity.connectionError(App.CONNECTION_ERROR);
                         }
                     }
             ) {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> headers = new HashMap<>();
-                    headers.put("Authorization", String.format("Token %s", LoginActivityAPI.getToken()));
+                    headers.put("Authorization", String.format("Token %s", LoginAPI.getToken()));
                     return headers;
                 }
             };

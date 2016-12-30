@@ -20,10 +20,21 @@
     <!-- fragment_type_url -->
     <string name="type_url">Type URL</string>
     <string name="ok">OK</string>
+    <!-- activity_vehicle_list -->
+    <string name="add_vehicle">Add vehicle</string>
+    <!-- activity_add_vehicle -->
+    <string name="name">Name</string>
+    <string name="plate_country">Plate country</string>
+    <string name="plate_number">Plate number</string>
+    <string-array name="countries">
+        <item>PL</item>
+        <item>DE</item>
+    </string-array>
     <!-- ParQ API URL -->
     <string name="url_login">api-token-auth/</string>
     <string name="url_current">current/</string>
     <string name="url_tickets">tickets/</string>
+    <string name="url_vehicles">vehicles/</string>
     <!-- SharedPreferences -->
     <string name="sharedpref_file_key">org.parq.parqofficer.sharedpref</string>
     <string name="sharedpref_url_slug">url</string>

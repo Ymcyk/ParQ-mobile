@@ -48,4 +48,10 @@ public class ParQURLConstructor {
                 .appendEncodedPath(context.getString(R.string.url_current));
         return builder.build().toString();
     }
+
+    public String getVehiclesURL() {
+        Builder builder = getBase()
+                .appendEncodedPath(context.getString(R.string.url_vehicles));
+        return builder.build().toString();
+    }
 }

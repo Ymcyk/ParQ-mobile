@@ -1,7 +1,5 @@
 package com.parq.parq.connection;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -13,7 +11,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.parq.parq.App;
 import com.parq.parq.LoginActivity;
-import com.parq.parq.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +19,7 @@ import org.json.JSONObject;
  * Created by piotr on 28.12.16.
  */
 
-public class LoginActivityAPI {
+public class LoginAPI {
     private LoginActivity loginActivity;
     private static String token;
 
@@ -30,12 +27,12 @@ public class LoginActivityAPI {
     public final static int CONNECTION_ERROR = 1;
     public final static int BAD_ROLE = 2;
 
-    public LoginActivityAPI(LoginActivity loginActivity){
+    public LoginAPI(LoginActivity loginActivity){
         this.loginActivity = loginActivity;
     }
 
     static String getToken() {
-        return LoginActivityAPI.token;
+        return LoginAPI.token;
     }
 
     public boolean tryLoginWithToken() {

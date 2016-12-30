@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.parq.parq.connection.LoginActivityAPI;
+import com.parq.parq.connection.LoginAPI;
 import com.parq.parq.connection.ParQURLConstructor;
 
 public class LoginActivity extends AppCompatActivity {
@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordLabel;
     private Button loginButton;
 
-    private LoginActivityAPI api;
+    private LoginAPI api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         showTypeUrlDialog();
 
         setApp();
-        api = new LoginActivityAPI(this);
+        api = new LoginAPI(this);
     }
 
     private void setApp(){
@@ -68,13 +68,13 @@ public class LoginActivity extends AppCompatActivity {
 
     public void connectionError(int errorCode) {
         switch (errorCode){
-            case LoginActivityAPI.PARSE_ERROR:
+            case LoginAPI.PARSE_ERROR:
                 Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
                 break;
-            case LoginActivityAPI.CONNECTION_ERROR:
+            case LoginAPI.CONNECTION_ERROR:
                 Toast.makeText(this, "Connection error", Toast.LENGTH_SHORT).show();
                 break;
-            case LoginActivityAPI.BAD_ROLE:
+            case LoginAPI.BAD_ROLE:
                 Toast.makeText(this, "Only drivers can login", Toast.LENGTH_SHORT).show();
                 break;
         }

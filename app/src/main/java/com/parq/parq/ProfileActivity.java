@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parq.parq.connection.Profile;
-import com.parq.parq.connection.ProfileActivityAPI;
+import com.parq.parq.connection.ProfileAPI;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
@@ -31,7 +31,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private EditText amountText;
     private Button payButton;
 
-    private ProfileActivityAPI api;
+    private ProfileAPI api;
 
     public final static int PAYPAL_REQUEST_CODE = 42;
     private static PayPalConfiguration config = new PayPalConfiguration()
@@ -54,7 +54,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         payButton.setOnClickListener(this);
 
-        api = new ProfileActivityAPI(this);
+        api = new ProfileAPI(this);
     }
 
     @Override
@@ -89,13 +89,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     public void connectionError(int errorCode) {
         switch (errorCode){
-            case ProfileActivityAPI.BAD_TOKEN:
-                Toast.makeText(this, "Bad token", Toast.LENGTH_LONG).show();
+            case App.UNAUTHENTICATED:
+                Toast.makeText(this, "Unauthenticated", Toast.LENGTH_LONG).show();
                 break;
-            case ProfileActivityAPI.CONNECTION_ERROR:
+            case App.CONNECTION_ERROR:
                 Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
                 break;
-            case ProfileActivityAPI.PARSE_ERROR:
+            case App.PARSE_ERROR:
                 Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
                 break;
         }
