@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parq.parq.connection.PaymentAPI;
 import com.parq.parq.connection.Profile;
 import com.parq.parq.connection.ProfileAPI;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
@@ -20,6 +21,7 @@ import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.math.BigDecimal;
 
@@ -32,6 +34,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private Button payButton;
 
     private ProfileAPI api;
+    private PaymentAPI paymentApi;
 
     public final static int PAYPAL_REQUEST_CODE = 42;
     private static PayPalConfiguration config = new PayPalConfiguration()
@@ -55,6 +58,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         payButton.setOnClickListener(this);
 
         api = new ProfileAPI(this);
+        paymentApi = new PaymentAPI(this);
     }
 
     @Override
@@ -85,6 +89,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         usernameText.setText(profile.getUsername());
         emailText.setText(profile.getEmail());
         walletText.setText(profile.getWallet());
+    }
+
+    public void paymentSendSuccess() {
+        Toast.makeText(this, "Payment success", Toast.LENGTH_LONG).show();
+        api.requestProfile();
     }
 
     public void connectionError(int errorCode) {
@@ -121,9 +130,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 try {
                     String paymentDetils = confirm.toJSONObject().toString(4);
                     Log.i("payment", paymentDetils);
-                    startActivity(new Intent(this, ConfirmationActivity.class)
-                        .putExtra("PaymentResultJson", paymentDetils)
-                        .putExtra("PaymentAmount", paymentAmount));
+                    sendPayment(paymentDetils);
+                    //startActivity(new Intent(this, ConfirmationActivity.class)
+                    //    .putExtra("PaymentResultJson", paymentDetils)
+                    //    .putExtra("PaymentAmount", paymentAmount));
                 } catch(JSONException e) {
                     Log.e("payment", "Error occurred on parsing: ", e);
                 }
@@ -132,5 +142,18 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             Log.i("payment", "User canceled");
         } else if(resultCode == PaymentActivity.RESULT_EXTRAS_INVALID)
             Log.i("payment", "Invalid payment or PayPalConfiguration");
+    }
+
+    private void sendPayment(String response) {
+        try {
+            JSONObject json = new JSONObject(response);
+            JSONObject jsonResponse = json.getJSONObject("response");
+
+            String id = jsonResponse.getString("id");
+
+            paymentApi.postPayment(id, Double.valueOf(paymentAmount));
+        } catch (JSONException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -38,6 +38,8 @@
     <string name="to">To</string>
     <string name="buy_ticket">Buy ticket</string>
     <string name="select_date">Select date</string>
+    <!-- activity_buy_tickets -->
+    <string name="vehicles">Vehicles</string>
     <!-- ParQ API URL -->
     <string name="url_login">api-token-auth/</string>
     <string name="url_current">current/</string>
@@ -45,6 +47,7 @@
     <string name="url_vehicles">vehicles/</string>
     <string name="url_schedules">schedules/</string>
     <string name="url_parkings">parkings/</string>
+    <string name="url_payments">payments/</string>
     <!-- SharedPreferences -->
     <string name="sharedpref_file_key">org.parq.parqofficer.sharedpref</string>
     <string name="sharedpref_url_slug">url</string>

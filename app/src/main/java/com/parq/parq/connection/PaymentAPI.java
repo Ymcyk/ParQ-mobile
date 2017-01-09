@@ -8,44 +8,40 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.parq.parq.AddVehicleActivity;
 import com.parq.parq.App;
+import com.parq.parq.ProfileActivity;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * Created by piotr on 30.12.16.
+ * Created by piotr on 09.01.17.
  */
 
-public class AddVehicleAPI {
-    private AddVehicleActivity addVehicleActivity;
+public class PaymentAPI {
+    private ProfileActivity profileActivity;
 
-    public AddVehicleAPI(AddVehicleActivity addVehicleActivity) {
-        this.addVehicleActivity = addVehicleActivity;
+    public PaymentAPI(ProfileActivity profileActivity) {
+        this.profileActivity = profileActivity;
     }
 
-    public void postVehicle(Vehicle vehicle) {
+    public void postPayment(String paymentId, double money) {
 
         Map<String, String> params = new HashMap<>();
-        params.put("name", vehicle.getName());
-        params.put("plate_country", vehicle.getPlateCountry());
-        params.put("plate_number", vehicle.getPlateNumber());
+        params.put("transaction_id", paymentId);
+        params.put("money", String.valueOf(money));
 
-        JsonObjectRequest addVehiclePost = new JsonObjectRequest(Request.Method.POST, App.getUrl().getVehiclesURL(),
+        JsonObjectRequest addPaymentPost = new JsonObjectRequest(Request.Method.POST, App.getUrl().getPaymentsURL(),
                 new JSONObject(params),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i("AddVehicle", "Response success");
-                        addVehicleActivity.addVehiclePostSuccess();
+                        Log.i("postPayment", "Response success");
+                        profileActivity.paymentSendSuccess();
                     }
                 },
                 new Response.ErrorListener() {
@@ -54,17 +50,17 @@ public class AddVehicleAPI {
 
                         if(error.networkResponse != null){
                             if(error.networkResponse.statusCode == 401) {
-                                addVehicleActivity.connectionError(App.UNAUTHENTICATED);
-                                Log.d("addVehicle", "Bad token 401");
+                                profileActivity.connectionError(App.UNAUTHENTICATED);
+                                Log.d("postPayment", "Bad token 401");
                             } else if(error.networkResponse.statusCode == 403) {
-                                addVehicleActivity.connectionError(App.UNAUTHENTICATED);
-                                Log.d("addVehicle", "Bad role 403");
+                                profileActivity.connectionError(App.UNAUTHENTICATED);
+                                Log.d("postPayment", "Bad role 403");
                             }
                         }
 
                         error.printStackTrace();
                         Log.d("VehicleList", "Connection error");
-                        addVehicleActivity.connectionError(App.CONNECTION_ERROR);
+                        profileActivity.connectionError(App.CONNECTION_ERROR);
                     }
                 }
         ) {
@@ -76,13 +72,13 @@ public class AddVehicleAPI {
             }
 
         };
-        addVehiclePost.setRetryPolicy(
+        addPaymentPost.setRetryPolicy(
                 new DefaultRetryPolicy(
                         DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
                         1,
                         DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
                 )
         );
-        Volley.newRequestQueue(addVehicleActivity).add(addVehiclePost);
+        Volley.newRequestQueue(profileActivity).add(addPaymentPost);
     }
 }

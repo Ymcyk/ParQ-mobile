@@ -70,4 +70,10 @@ public class ParQURLConstructor {
                 .appendEncodedPath(context.getString(R.string.url_vehicles));
         return builder.build().toString();
     }
+
+    public String getPaymentsURL() {
+        Builder builder = getBase()
+                .appendEncodedPath(context.getString(R.string.url_payments));
+        return builder.build().toString();
+    }
 }

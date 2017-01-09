@@ -3,9 +3,12 @@ package com.parq.parq;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -40,6 +43,8 @@ public class TicketsActivity extends AppCompatActivity implements View.OnClickLi
     private DatePickerDialog dateDialog;
     private SimpleDateFormat dateFormat;
 
+    private Bundle ticketBundle = new Bundle();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +56,7 @@ public class TicketsActivity extends AppCompatActivity implements View.OnClickLi
         toText = (TextView) findViewById(R.id.to_text);
         buyTicketButton = (Button) findViewById(R.id.buy_ticket_button);
 
+        buyTicketButton.setOnClickListener(this);
         parkingAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         parkingSpinner.setAdapter(parkingAdapter);
 
@@ -58,7 +64,11 @@ public class TicketsActivity extends AppCompatActivity implements View.OnClickLi
 
         dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         setDateLabel();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         api.requestParkings();
     }
 
@@ -73,9 +83,12 @@ public class TicketsActivity extends AppCompatActivity implements View.OnClickLi
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, month, dayOfMonth);
                 dateLabel.setText(dateFormat.format(newDate.getTime()));
-                
+
                 if(datePicker.isShown()){
                     Parking parking = (Parking) parkingSpinner.getSelectedItem();
+                    ticketBundle.putInt("year", year);
+                    ticketBundle.putInt("month", month);
+                    ticketBundle.putInt("day", dayOfMonth);
                     api.requestSchedules(year, month+1, dayOfMonth, parking.getId());
                 }
             }
@@ -94,10 +107,12 @@ public class TicketsActivity extends AppCompatActivity implements View.OnClickLi
     public void scheduleRequestSuccess(Schedule schedule) {
         if(schedule == null) {
             Toast.makeText(this, "No schedule for given date", Toast.LENGTH_LONG).show();
+            buyTicketButton.setEnabled(false);
             fromText.setText("");
             toText.setText("");
             return;
         }
+        buyTicketButton.setEnabled(true);
         fromText.setText(schedule.getStart().toString());
         toText.setText(schedule.getEnd().toString());
     }
@@ -119,7 +134,13 @@ public class TicketsActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         if(view == buyTicketButton){
+            Parking parking = (Parking) parkingSpinner.getSelectedItem();
+            ticketBundle.putInt("parkingId", parking.getId());
 
+            Intent intent = new Intent(this, BuyTicketActivity.class);
+            intent.putExtras(ticketBundle);
+
+            startActivity(intent);
         } else if(view == dateLabel) {
             dateDialog.show();
         }

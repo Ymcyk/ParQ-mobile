@@ -15,7 +15,7 @@ public class App {
     public final static int PARSE_ERROR = 0;
     public final static int CONNECTION_ERROR = 1;
     public final static int UNAUTHENTICATED = 2;
-
+    public final static int NOT_ACCEPTABLE = 3;
 
     public static SharedPreferences getSharedPref() {
         return sharedPref;
