@@ -5,6 +5,8 @@ import android.net.Uri.Builder;
 
 import com.parq.parq.R;
 
+import java.util.Locale;
+
 /**
  * Created by piotr on 27.12.16.
  */
@@ -40,6 +42,20 @@ public class ParQURLConstructor {
         Builder builder = getBase()
                 .appendEncodedPath(context.getString(R.string.url_tickets))
                 .appendQueryParameter("badge", badge);
+        return builder.build().toString();
+    }
+
+    public String getSchedulesByDateAndParkingURL(int year, int month, int day, int parkingId) {
+        Builder builder = getBase()
+                .appendEncodedPath(context.getString(R.string.url_schedules))
+                .appendQueryParameter("date", String.format(Locale.ENGLISH, "%d-%d-%d", year, month, day))
+                .appendQueryParameter("parking", String.valueOf(parkingId));
+        return builder.build().toString();
+    }
+
+    public String getParkingsURL() {
+        Builder builder = getBase()
+                .appendEncodedPath(context.getString(R.string.url_parkings));
         return builder.build().toString();
     }
 

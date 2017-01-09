@@ -1,0 +1,43 @@
+package com.parq.parq.connection;
+
+/**
+ * Created by piotr on 08.01.17.
+ */
+
+public class Parking {
+    private int id;
+    private String name;
+    private String description;
+
+    public Parking() {}
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s", this.name);
+    }
+}
