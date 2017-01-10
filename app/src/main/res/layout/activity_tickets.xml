@@ -36,8 +36,9 @@
             android:layout_marginEnd="46dp"
             android:layout_marginRight="46dp"
             android:text="@string/date"/>
-        <EditText
+        <Button
             android:id="@+id/date_label"
+            style="@style/Widget.AppCompat.EditText"
             android:layout_gravity="fill_horizontal"
             android:gravity="start"
             android:textSize="16dp"

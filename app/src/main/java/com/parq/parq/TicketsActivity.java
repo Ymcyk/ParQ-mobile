@@ -29,7 +29,7 @@ import java.util.Locale;
 
 public class TicketsActivity extends AppCompatActivity implements View.OnClickListener {
     private Spinner parkingSpinner;
-    private EditText dateLabel;
+    private Button dateLabel;
     private TextView scheduleDetailText;
     private Button buyTicketButton;
     private ListView ticketList;
@@ -58,7 +58,7 @@ public class TicketsActivity extends AppCompatActivity implements View.OnClickLi
 
     private void setViews() {
         parkingSpinner = (Spinner) findViewById(R.id.parking_spinner);
-        dateLabel = (EditText) findViewById(R.id.date_label);
+        dateLabel = (Button) findViewById(R.id.date_label);
         buyTicketButton = (Button) findViewById(R.id.buy_ticket_button);
         scheduleDetailText = (TextView) findViewById(R.id.schedule_detail_text);
         ticketList = (ListView) findViewById(R.id.tickets_list);
