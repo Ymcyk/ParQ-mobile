@@ -60,7 +60,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         App.setUrl(url);
     }
 
-    public void loginSuccess() {
+    public void loginSuccess(String token) {
+        App.setToken(token);
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }

@@ -21,7 +21,6 @@ import org.json.JSONObject;
 
 public class LoginAPI {
     private LoginActivity loginActivity;
-    private static String token;
 
     public final static int PARSE_ERROR = 0;
     public final static int CONNECTION_ERROR = 1;
@@ -29,10 +28,6 @@ public class LoginAPI {
 
     public LoginAPI(LoginActivity loginActivity){
         this.loginActivity = loginActivity;
-    }
-
-    static String getToken() {
-        return LoginAPI.token;
     }
 
     public boolean tryLoginWithToken() {
@@ -46,9 +41,9 @@ public class LoginAPI {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
-                            token = jsonResponse.getString("token");
+                            String token = jsonResponse.getString("token");
                             Log.i("Token received",token);
-                            loginActivity.loginSuccess();
+                            loginActivity.loginSuccess(token);
                         } catch (JSONException e) {
                             Log.d("Login", "JSON parse error");
                             e.printStackTrace();

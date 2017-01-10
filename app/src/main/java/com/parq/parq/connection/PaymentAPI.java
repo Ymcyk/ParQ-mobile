@@ -67,7 +67,7 @@ public class PaymentAPI {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", String.format("Token %s", LoginAPI.getToken()));
+                headers.put("Authorization", String.format("Token %s", App.getToken()));
                 return headers;
             }
 

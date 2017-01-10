@@ -11,6 +11,7 @@ import com.parq.parq.connection.ParQURLConstructor;
 public class App {
     private static SharedPreferences sharedPref;
     private static ParQURLConstructor url;
+    private static String token;
 
     public final static int PARSE_ERROR = 0;
     public final static int CONNECTION_ERROR = 1;
@@ -31,5 +32,13 @@ public class App {
 
     public static void setUrl(ParQURLConstructor url) {
         App.url = url;
+    }
+
+    public static String getToken() {
+        return token;
+    }
+
+    public static void setToken(String token) {
+        App.token = token;
     }
 }
