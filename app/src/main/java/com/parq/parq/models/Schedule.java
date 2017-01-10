@@ -1,4 +1,6 @@
-package com.parq.parq.connection;
+package com.parq.parq.models;
+
+import com.parq.parq.models.Charge;
 
 import java.util.Date;
 import java.util.List;

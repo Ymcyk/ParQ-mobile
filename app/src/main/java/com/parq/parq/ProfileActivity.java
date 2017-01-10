@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parq.parq.connection.PaymentAPI;
-import com.parq.parq.connection.Profile;
+import com.parq.parq.models.Profile;
 import com.parq.parq.connection.ProfileAPI;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
@@ -48,22 +48,26 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        usernameText = (TextView) findViewById(R.id.username_text);
-        emailText = (TextView) findViewById(R.id.email_text);
-        walletText = (TextView) findViewById(R.id.wallet_text);
-
-        amountText = (EditText) findViewById(R.id.amount_label);
-        payButton = (Button) findViewById(R.id.pay_button);
-
-        payButton.setOnClickListener(this);
+        setViews();
 
         api = new ProfileAPI(this);
         paymentApi = new PaymentAPI(this);
     }
 
+    private void setViews() {
+        usernameText = (TextView) findViewById(R.id.username_text);
+        emailText = (TextView) findViewById(R.id.email_text);
+        walletText = (TextView) findViewById(R.id.wallet_text);
+        amountText = (EditText) findViewById(R.id.amount_label);
+        payButton = (Button) findViewById(R.id.pay_button);
+
+        payButton.setOnClickListener(this);
+    }
+
     @Override
     public void onClick(View view) {
-        getPayment();
+        if(view == payButton)
+            getPayment();
     }
 
     private void getPayment() {

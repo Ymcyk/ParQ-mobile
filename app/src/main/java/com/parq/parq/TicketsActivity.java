@@ -1,17 +1,11 @@
 package com.parq.parq;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -23,24 +17,19 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parq.parq.connection.Parking;
-import com.parq.parq.connection.Schedule;
-import com.parq.parq.connection.Ticket;
+import com.parq.parq.models.Parking;
+import com.parq.parq.models.Schedule;
+import com.parq.parq.models.Ticket;
 import com.parq.parq.connection.TicketsAPI;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class TicketsActivity extends AppCompatActivity implements View.OnClickListener {
     private Spinner parkingSpinner;
     private EditText dateLabel;
-    //private TextView fromText;
-    //private TextView toText;
     private TextView scheduleDetailText;
     private Button buyTicketButton;
     private ListView ticketList;
@@ -59,10 +48,17 @@ public class TicketsActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tickets);
 
+        setViews();
+        setDateLabel();
+
+        api = new TicketsAPI(this);
+
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    }
+
+    private void setViews() {
         parkingSpinner = (Spinner) findViewById(R.id.parking_spinner);
         dateLabel = (EditText) findViewById(R.id.date_label);
-        //fromText = (TextView) findViewById(R.id.from_text);
-        //toText = (TextView) findViewById(R.id.to_text);
         buyTicketButton = (Button) findViewById(R.id.buy_ticket_button);
         scheduleDetailText = (TextView) findViewById(R.id.schedule_detail_text);
         ticketList = (ListView) findViewById(R.id.tickets_list);
@@ -73,11 +69,6 @@ public class TicketsActivity extends AppCompatActivity implements View.OnClickLi
         buyTicketButton.setOnClickListener(this);
         parkingAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         parkingSpinner.setAdapter(parkingAdapter);
-
-        api = new TicketsAPI(this);
-
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        setDateLabel();
     }
 
     @Override
@@ -133,8 +124,6 @@ public class TicketsActivity extends AppCompatActivity implements View.OnClickLi
             Toast.makeText(this, "No schedule for given date", Toast.LENGTH_LONG).show();
             scheduleDetailText.setText("closed");
             buyTicketButton.setEnabled(false);
-            //fromText.setText("");
-            //toText.setText("");
             return;
         }
         Calendar start = Calendar.getInstance();
@@ -150,8 +139,6 @@ public class TicketsActivity extends AppCompatActivity implements View.OnClickLi
                 end.get(Calendar.MINUTE)));
 
         buyTicketButton.setEnabled(true);
-        //fromText.setText(schedule.getStart().toString());
-        //toText.setText(schedule.getEnd().toString());
     }
 
     public void connectionError(int errorCode) {

@@ -1,9 +1,8 @@
 package com.parq.parq;
 
 import android.app.TimePickerDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.format.DateFormat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,12 +13,10 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.parq.parq.connection.BuyTicketsAPI;
-import com.parq.parq.connection.Parking;
-import com.parq.parq.connection.Ticket;
-import com.parq.parq.connection.Vehicle;
+import com.parq.parq.models.Ticket;
+import com.parq.parq.models.Vehicle;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,6 +51,12 @@ public class BuyTicketActivity extends AppCompatActivity implements View.OnClick
 
         api = new BuyTicketsAPI(this);
 
+        setViews();
+
+        setTimeLabels(ticket);
+    }
+
+    private void setViews() {
         fromLabel = (EditText) findViewById(R.id.from_label);
         toLabel = (EditText) findViewById(R.id.to_label);
         buyTicket = (Button) findViewById(R.id.accept_ticket_button);
@@ -62,8 +65,6 @@ public class BuyTicketActivity extends AppCompatActivity implements View.OnClick
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         vehiclesSpinner = (Spinner) findViewById(R.id.vehicles_spinner);
         vehiclesSpinner.setAdapter(adapter);
-
-        setTimeLabels(ticket);
     }
 
     private void setTimeLabels(final Ticket ticket) {

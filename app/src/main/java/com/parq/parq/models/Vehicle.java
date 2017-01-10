@@ -1,4 +1,4 @@
-package com.parq.parq.connection;
+package com.parq.parq.models;
 
 /**
  * Created by piotr on 30.12.16.

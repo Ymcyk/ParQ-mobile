@@ -1,4 +1,4 @@
-package com.parq.parq.connection;
+package com.parq.parq.models;
 
 import java.util.Locale;
 

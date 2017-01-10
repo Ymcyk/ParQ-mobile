@@ -10,6 +10,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.parq.parq.App;
 import com.parq.parq.ProfileActivity;
+import com.parq.parq.models.Profile;
 
 import org.json.JSONException;
 import org.json.JSONObject;

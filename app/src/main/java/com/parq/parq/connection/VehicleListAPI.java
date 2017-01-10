@@ -10,6 +10,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.parq.parq.App;
 import com.parq.parq.VehicleListActivity;
+import com.parq.parq.models.Vehicle;
 
 import org.json.JSONArray;
 import org.json.JSONException;

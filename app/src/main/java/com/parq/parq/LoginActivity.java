@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         api = new LoginAPI(this);
     }
 
-    void setViews() {
+    private void setViews() {
         usernameLabel = (EditText) findViewById(R.id.username_label);
         passwordLabel = (EditText) findViewById(R.id.password_label);
         loginButton = (Button) findViewById(R.id.login_button);

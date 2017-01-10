@@ -12,8 +12,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.parq.parq.connection.AddVehicleAPI;
-import com.parq.parq.connection.Vehicle;
-import com.parq.parq.connection.VehicleListAPI;
+import com.parq.parq.models.Vehicle;
 
 public class AddVehicleActivity extends AppCompatActivity {
     private EditText nameLabel;
@@ -28,6 +27,12 @@ public class AddVehicleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_vehicle);
 
+        setViews();
+
+        api = new AddVehicleAPI(this);
+    }
+
+    private void setViews() {
         nameLabel = (EditText) findViewById(R.id.name_label);
         plateCountrySpinner = (Spinner) findViewById(R.id.plate_country_spinner);
         plateNumberLabel = (EditText) findViewById(R.id.plate_number_label);
@@ -35,8 +40,6 @@ public class AddVehicleActivity extends AppCompatActivity {
 
         nameLabel.addTextChangedListener(vehicleTextWatcher);
         plateNumberLabel.addTextChangedListener(vehicleTextWatcher);
-
-        api = new AddVehicleAPI(this);
     }
 
     public void addVehicleOnClick(View view) {
@@ -52,10 +55,6 @@ public class AddVehicleActivity extends AppCompatActivity {
     public void addVehiclePostSuccess(){
         Log.i("AddVehicleActivity", "Before finish");
         finish();
-    }
-
-    public void addVehiclePostFailure(){
-
     }
 
     public void connectionError(int errorCode) {

@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.parq.parq.connection.Vehicle;
+import com.parq.parq.models.Vehicle;
 import com.parq.parq.connection.VehicleListAPI;
 
 import java.util.List;

@@ -10,6 +10,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.parq.parq.App;
 import com.parq.parq.TicketsActivity;
+import com.parq.parq.models.Charge;
+import com.parq.parq.models.Parking;
+import com.parq.parq.models.Schedule;
+import com.parq.parq.models.Ticket;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,8 +27,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
-
-import static com.parq.parq.R.string.parking;
 
 /**
  * Created by piotr on 08.01.17.
