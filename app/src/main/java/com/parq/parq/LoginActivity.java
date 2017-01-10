@@ -16,10 +16,11 @@ import android.widget.Toast;
 import com.parq.parq.connection.LoginAPI;
 import com.parq.parq.connection.ParQURLConstructor;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText usernameLabel;
     private EditText passwordLabel;
     private Button loginButton;
+    private Button registerButton;
 
     private LoginAPI api;
 
@@ -28,17 +29,25 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        usernameLabel = (EditText) findViewById(R.id.username_label);
-        passwordLabel = (EditText) findViewById(R.id.password_label);
-        loginButton = (Button) findViewById(R.id.login_button);
-
-        usernameLabel.addTextChangedListener(loginTextWatcher);
-        passwordLabel.addTextChangedListener(loginTextWatcher);
+        setViews();
 
         showTypeUrlDialog();
 
         setApp();
         api = new LoginAPI(this);
+    }
+
+    void setViews() {
+        usernameLabel = (EditText) findViewById(R.id.username_label);
+        passwordLabel = (EditText) findViewById(R.id.password_label);
+        loginButton = (Button) findViewById(R.id.login_button);
+        registerButton = (Button) findViewById(R.id.register_button);
+
+        loginButton.setOnClickListener(this);
+        registerButton.setOnClickListener(this);
+
+        usernameLabel.addTextChangedListener(loginTextWatcher);
+        passwordLabel.addTextChangedListener(loginTextWatcher);
     }
 
     private void setApp(){
@@ -49,16 +58,6 @@ public class LoginActivity extends AppCompatActivity {
         ParQURLConstructor url = new ParQURLConstructor(authority, getApplicationContext());
         App.setSharedPref(sharedPref);
         App.setUrl(url);
-    }
-
-    public void loginOnClick(View view) {
-        String username = usernameLabel.getText().toString();
-        String password = passwordLabel.getText().toString();
-        api.login(username, password);
-    }
-
-    public void registerOnClick(View view){
-        startActivity(new Intent(this, RegisterActivity.class));
     }
 
     public void loginSuccess() {
@@ -113,5 +112,24 @@ public class LoginActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         TypeUrlDialog dialog = new TypeUrlDialog();
         dialog.show(fm, "fragment_type_url");
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view == loginButton) {
+            sendLoginRequest();
+        } else if(view == registerButton) {
+            startRegisterActivity();
+        }
+    }
+
+    public void sendLoginRequest() {
+        String username = usernameLabel.getText().toString();
+        String password = passwordLabel.getText().toString();
+        api.login(username, password);
+    }
+
+    public void startRegisterActivity(){
+        startActivity(new Intent(this, RegisterActivity.class));
     }
 }
