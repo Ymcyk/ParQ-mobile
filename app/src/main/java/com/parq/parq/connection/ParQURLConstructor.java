@@ -83,4 +83,10 @@ public class ParQURLConstructor {
                 .appendEncodedPath(context.getString(R.string.url_payments));
         return builder.build().toString();
     }
+
+    public String getRegisterURL() {
+        Builder builder = getBase()
+                .appendEncodedPath(context.getString(R.string.url_register));
+        return builder.build().toString();
+    }
 }

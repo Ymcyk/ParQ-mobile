@@ -51,6 +51,7 @@
     <string name="url_schedules">schedules/</string>
     <string name="url_parkings">parkings/</string>
     <string name="url_payments">payments/</string>
+    <string name="url_register">register/</string>
     <!-- SharedPreferences -->
     <string name="sharedpref_file_key">org.parq.parqofficer.sharedpref</string>
     <string name="sharedpref_url_slug">url</string>

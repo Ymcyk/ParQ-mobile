@@ -9,11 +9,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.parq.parq.connection.RegisterAPI;
+import com.parq.parq.models.Profile;
+
 public class RegisterActivity extends AppCompatActivity {
     private EditText usernameLabel;
     private EditText emailLabel;
     private EditText passwordLabel;
     private Button registerButton;
+
+    private RegisterAPI api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +26,8 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         setViews();
+
+        api = new RegisterAPI(this);
     }
 
     private void setViews() {
@@ -35,11 +42,17 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void registerOnClick(View view) {
-        //TODO api call
-        registerPostSuccess();
+        Profile profile = new Profile();
+
+        profile.setUsername(usernameLabel.getText().toString());
+        profile.setEmail(emailLabel.getText().toString());
+        profile.setPassword(passwordLabel.getText().toString());
+
+        api.postDriver(profile);
     }
 
     public void registerPostSuccess(){
+        Toast.makeText(this, "User added", Toast.LENGTH_LONG).show();
         finish();
     }
 
@@ -53,6 +66,9 @@ public class RegisterActivity extends AppCompatActivity {
                 break;
             case App.PARSE_ERROR:
                 Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
+                break;
+            case App.USER_EXIST:
+                Toast.makeText(this, "Username already exist", Toast.LENGTH_LONG).show();
                 break;
         }
     }
