@@ -4,6 +4,9 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+    <string name="register">Register</string>
+    <!-- activity_register -->
+
     <!-- activity_menu -->
     <string-array name="options">
         <item>Your profile</item>

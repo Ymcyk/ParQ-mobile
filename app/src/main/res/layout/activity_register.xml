@@ -27,6 +27,15 @@
             android:layout_marginBottom="8dp"
             android:hint="@string/username"/>
 
+        <EditText
+            android:id="@+id/email_label"
+            android:inputType="textEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/email"/>
+
         <!-- Password label -->
         <EditText
             android:id="@+id/password_label"
@@ -37,24 +46,17 @@
             android:layout_marginBottom="8dp"
             android:hint="@string/password"/>
 
-        <!-- Login button -->
+        <!-- Register button -->
         <Button
-            android:id="@+id/login_button"
+            android:id="@+id/register_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:enabled="false"
-            android:onClick="loginOnClick"
-            android:text="@string/login"/>
-
-        <Button
-            android:id="@+id/register_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:onClick="registerOnClick"
             android:text="@string/register"/>
+
     </LinearLayout>
 </ScrollView>
 

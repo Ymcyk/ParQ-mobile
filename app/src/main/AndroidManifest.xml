@@ -26,7 +26,8 @@
         <activity android:name=".VehicleListActivity" />
         <activity android:name=".AddVehicleActivity" />
         <activity android:name=".TicketsActivity" />
-        <activity android:name=".BuyTicketActivity"></activity>
+        <activity android:name=".BuyTicketActivity" />
+        <activity android:name=".RegisterActivity"></activity>
     </application>
 
 </manifest>

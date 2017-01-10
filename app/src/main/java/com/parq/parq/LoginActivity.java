@@ -57,6 +57,10 @@ public class LoginActivity extends AppCompatActivity {
         api.login(username, password);
     }
 
+    public void registerOnClick(View view){
+        startActivity(new Intent(this, RegisterActivity.class));
+    }
+
     public void loginSuccess() {
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
