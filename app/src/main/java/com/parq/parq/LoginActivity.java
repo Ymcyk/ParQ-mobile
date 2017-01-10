@@ -72,13 +72,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public void connectionError(int errorCode) {
         switch (errorCode){
-            case LoginAPI.PARSE_ERROR:
+            case App.PARSE_ERROR:
                 Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
                 break;
-            case LoginAPI.CONNECTION_ERROR:
+            case App.CONNECTION_ERROR:
                 Toast.makeText(this, "Connection error", Toast.LENGTH_SHORT).show();
                 break;
-            case LoginAPI.BAD_ROLE:
+            case App.UNAUTHENTICATED:
                 Toast.makeText(this, "Only drivers can login", Toast.LENGTH_SHORT).show();
                 break;
         }

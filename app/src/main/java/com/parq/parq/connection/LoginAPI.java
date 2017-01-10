@@ -22,10 +22,6 @@ import org.json.JSONObject;
 public class LoginAPI {
     private LoginActivity loginActivity;
 
-    public final static int PARSE_ERROR = 0;
-    public final static int CONNECTION_ERROR = 1;
-    public final static int BAD_ROLE = 2;
-
     public LoginAPI(LoginActivity loginActivity){
         this.loginActivity = loginActivity;
     }
@@ -47,7 +43,7 @@ public class LoginAPI {
                         } catch (JSONException e) {
                             Log.d("Login", "JSON parse error");
                             e.printStackTrace();
-                            loginActivity.connectionError(PARSE_ERROR);
+                            loginActivity.connectionError(App.PARSE_ERROR);
                         }
                     }
                 },
@@ -59,12 +55,12 @@ public class LoginAPI {
                             loginActivity.loginFailure();
                             Log.i("Login", "Bad login or password");
                         } else if(er != null && er.statusCode == 403) {
-                            loginActivity.connectionError(BAD_ROLE);
+                            loginActivity.connectionError(App.UNAUTHENTICATED);
                             Log.d("Login", "Bad role");
                         } else {
                             error.printStackTrace();
                             Log.d("Login", "Connection error");
-                            loginActivity.connectionError(CONNECTION_ERROR);
+                            loginActivity.connectionError(App.CONNECTION_ERROR);
                         }
                     }
                 }
