@@ -38,6 +38,13 @@ public class ParQURLConstructor {
         return builder.build().toString();
     }
 
+    public String getTicketByParkingURL(String parking) {
+        Builder builder = getBase()
+                .appendEncodedPath(context.getString(R.string.url_tickets))
+                .appendQueryParameter("parking", parking);
+        return builder.build().toString();
+    }
+
     public String getTicketByBadgeURL(String badge) {
         Builder builder = getBase()
                 .appendEncodedPath(context.getString(R.string.url_tickets))

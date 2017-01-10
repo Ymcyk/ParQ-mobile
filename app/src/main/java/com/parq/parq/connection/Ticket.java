@@ -12,6 +12,9 @@ public class Ticket {
     private Calendar end;
     private int parkingId;
     private int vehicleId;
+    private String name;
+
+    public Ticket() {}
 
     public Ticket(int year, int month, int day) {
         start = Calendar.getInstance();
@@ -61,5 +64,13 @@ public class Ticket {
                 start.get(Calendar.HOUR_OF_DAY), start.get(Calendar.MINUTE),
                 end.get(Calendar.YEAR), end.get(Calendar.MONTH), end.get(Calendar.DAY_OF_MONTH),
                 end.get(Calendar.HOUR_OF_DAY), end.get(Calendar.MINUTE));
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

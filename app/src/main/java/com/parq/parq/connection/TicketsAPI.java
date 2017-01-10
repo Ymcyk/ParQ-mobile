@@ -17,11 +17,14 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
+
+import static com.parq.parq.R.string.parking;
 
 /**
  * Created by piotr on 08.01.17.
@@ -32,6 +35,87 @@ public class TicketsAPI {
 
     public TicketsAPI(TicketsActivity ticketsActivity){
         this.ticketsActivity = ticketsActivity;
+    }
+
+    public void requestTickets(int parkingId) {
+        StringRequest ticketsRequest = new StringRequest(
+                Request.Method.GET,
+                App.getUrl().getTicketByParkingURL(String.valueOf(parkingId)),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //2017-01-10T12:30:00Z
+                            JSONArray array = new JSONArray(response);
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd'T'H:mm:ss'Z'", Locale.GERMAN);
+                            LinkedList<Ticket> ticketsList = new LinkedList<>();
+                            Log.i("Ticket length", String.valueOf(array.length()));
+                            for(int i = 0; i < array.length(); i++) {
+                                JSONObject json = array.getJSONObject(i);
+                                Ticket ticket = new Ticket();
+
+                                try {
+                                    Date start = sdf.parse(json.getString("start"));
+                                    Date end = sdf.parse(json.getString("end"));
+
+                                    Calendar startCal = Calendar.getInstance();
+                                    startCal.setTime(start);
+                                    ticket.setStart(startCal);
+
+                                    Calendar endCal = Calendar.getInstance();
+                                    endCal.setTime(end);
+                                    ticket.setEnd(endCal);
+
+                                    //Log.i("start hour", String.valueOf(startCal.get(Calendar.HOUR_OF_DAY)));
+                                    //Log.i("end hour", String.valueOf(endCal.get(Calendar.HOUR_OF_DAY)));
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+                                JSONObject veh = json.getJSONObject("vehicle");
+                                ticket.setName(veh.getString("name"));
+
+                                ticketsList.add(ticket);
+                            }
+
+                            Log.i("ticketList", "Size: " + ticketsList.size());
+                            ticketsActivity.ticketsRequestSuccess(ticketsList);
+                        } catch (JSONException e) {
+                            Log.d("ticketList", "JSON parse error");
+                            e.printStackTrace();
+                            ticketsActivity.connectionError(App.PARSE_ERROR);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        if(error.networkResponse != null){
+                            if(error.networkResponse.statusCode == 401) {
+                                ticketsActivity.connectionError(App.UNAUTHENTICATED);
+                                Log.d("ticketList", "Bad token 401");
+                            } else if(error.networkResponse.statusCode == 403) {
+                                ticketsActivity.connectionError(App.UNAUTHENTICATED);
+                                Log.d("ticketList", "Bad role 403");
+                            }
+                        }
+
+                        error.printStackTrace();
+                        Log.d("ticketList", "Connection error");
+                        ticketsActivity.connectionError(App.CONNECTION_ERROR);
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", String.format("Token %s", LoginAPI.getToken()));
+                return headers;
+            }
+        };
+
+        Volley.newRequestQueue(ticketsActivity).add(ticketsRequest);
     }
 
     public void requestParkings() {

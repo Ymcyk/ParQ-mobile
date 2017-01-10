@@ -1,91 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_tickets"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.parq.parq.TicketsActivity">
 
-    <TableLayout
-        android:id="@+id/parking_table"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TableRow
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/parking"/>
-            <Spinner
-                android:id="@+id/parking_spinner"
-                android:layout_weight="1"
-                android:layout_marginLeft="40dp"
-                android:layout_marginStart="40dp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent" />
-        </TableRow>
-        <TableRow
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/date"/>
-            <EditText
-                android:id="@+id/date_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="yyyy-mm-dd"
-                />
-        </TableRow>
-        <TableRow
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/schedule"/>
-            <TextView
-                android:id="@+id/selected_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </TableRow>
-        <TableRow
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/from"/>
-            <TextView
-                android:id="@+id/from_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </TableRow>
-        <TableRow
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/to"/>
-            <TextView
-                android:id="@+id/to_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </TableRow>
-    </TableLayout>
-    <Button
-        android:id="@+id/buy_ticket_button"
-        android:layout_below="@id/parking_table"
+    <GridLayout
+        android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:columnCount="2"
+        android:rowCount="3">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="46dp"
+            android:layout_marginRight="46dp"
+            android:text="@string/parking"/>
+        <Spinner
+            android:id="@+id/parking_spinner"
+            android:textSize="16dp"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_gravity="fill_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="46dp"
+            android:layout_marginRight="46dp"
+            android:text="@string/date"/>
+        <EditText
+            android:id="@+id/date_label"
+            android:layout_gravity="fill_horizontal"
+            android:gravity="start"
+            android:textSize="16dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="yyyy-mm-dd"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hours"/>
+        <TextView
+            android:id="@+id/schedule_detail_text"
+            android:textSize="16dp"
+            android:layout_gravity="fill_horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="Closed"/>
+    </GridLayout>
+
+    <Button
+        android:layout_marginBottom="20dp"
+        android:id="@+id/buy_ticket_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:enabled="false"
         android:text="@string/buy_ticket" />
-</RelativeLayout>
+
+    <TextView
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:text="Valid tickets"/>
+    <ListView
+        android:id="@+id/tickets_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+</LinearLayout>
