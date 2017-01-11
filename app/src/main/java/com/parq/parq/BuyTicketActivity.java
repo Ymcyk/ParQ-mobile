@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class BuyTicketActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText fromLabel;
-    private EditText toLabel;
+    private Button fromLabel;
+    private Button toLabel;
     private Spinner vehiclesSpinner;
     private Button buyTicket;
 
@@ -57,8 +57,8 @@ public class BuyTicketActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void setViews() {
-        fromLabel = (EditText) findViewById(R.id.from_label);
-        toLabel = (EditText) findViewById(R.id.to_label);
+        fromLabel = (Button) findViewById(R.id.from_label);
+        toLabel = (Button) findViewById(R.id.to_label);
         buyTicket = (Button) findViewById(R.id.accept_ticket_button);
         buyTicket.setOnClickListener(this);
 
