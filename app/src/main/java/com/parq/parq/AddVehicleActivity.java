@@ -4,17 +4,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.parq.parq.connection.AbstractAPI;
+import com.parq.parq.connection.APIResponse;
 import com.parq.parq.connection.AddVehicleAPI;
 import com.parq.parq.models.Vehicle;
 
-public class AddVehicleActivity extends AppCompatActivity {
+public class AddVehicleActivity extends AppCompatActivity implements APIResponse {
     private EditText nameLabel;
     private Spinner plateCountrySpinner;
     private EditText plateNumberLabel;
@@ -29,7 +30,7 @@ public class AddVehicleActivity extends AppCompatActivity {
 
         setViews();
 
-        api = new AddVehicleAPI(this);
+        api = new AddVehicleAPI(getApplicationContext(), this);
     }
 
     private void setViews() {
@@ -50,25 +51,6 @@ public class AddVehicleActivity extends AppCompatActivity {
         vehicle.setPlateNumber(plateNumberLabel.getText().toString());
 
         api.postVehicle(vehicle);
-    }
-
-    public void addVehiclePostSuccess(){
-        Log.i("AddVehicleActivity", "Before finish");
-        finish();
-    }
-
-    public void connectionError(int errorCode) {
-        switch (errorCode){
-            case App.UNAUTHENTICATED:
-                Toast.makeText(this, "Unauthenticated", Toast.LENGTH_LONG).show();
-                break;
-            case App.CONNECTION_ERROR:
-                Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
-                break;
-            case App.PARSE_ERROR:
-                Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
-                break;
-        }
     }
 
     private TextWatcher vehicleTextWatcher = new TextWatcher() {
@@ -94,5 +76,32 @@ public class AddVehicleActivity extends AppCompatActivity {
             addButton.setEnabled(false);
         else
             addButton.setEnabled(true);
+    }
+
+    @Override
+    public void responseSuccess(AbstractAPI abstractAPI) {
+        if(abstractAPI == this.api) {
+            Toast.makeText(this, "Vehicle added", Toast.LENGTH_LONG).show();
+            finish();
+        }
+    }
+
+    @Override
+    public void responseError(AbstractAPI abstractAPI) {
+        if(abstractAPI == this.api) {
+            switch (abstractAPI.getResponseCode()) {
+                case App.HTTP_401:
+                case App.HTTP_403:
+                    Toast.makeText(this, "Unauthenticated", Toast.LENGTH_LONG).show();
+                    break;
+                case App.PARSE_ERROR:
+                    Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
+                    break;
+                case App.CONNECTION_ERROR:
+                default:
+                    Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
+                    break;
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.parq.parq.connection;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -10,7 +11,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.parq.parq.App;
-import com.parq.parq.LoginActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,15 +19,12 @@ import org.json.JSONObject;
  * Created by piotr on 28.12.16.
  */
 
-public class LoginAPI {
-    private LoginActivity loginActivity;
+public class LoginAPI extends AbstractAPI {
 
-    public LoginAPI(LoginActivity loginActivity){
-        this.loginActivity = loginActivity;
-    }
+    private String token = "";
 
-    public boolean tryLoginWithToken() {
-        return false;
+    public LoginAPI(Context context, APIResponse apiResponse){
+        super(context, apiResponse);
     }
 
     public void login(final String username, final String password) {
@@ -37,13 +34,15 @@ public class LoginAPI {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
-                            String token = jsonResponse.getString("token");
+                            token = jsonResponse.getString("token");
                             Log.i("Token received",token);
-                            loginActivity.loginSuccess(token);
+                            responseCode = App.HTTP_2xx;
+                            apiResponse.responseSuccess(LoginAPI.this);
                         } catch (JSONException e) {
                             Log.d("Login", "JSON parse error");
                             e.printStackTrace();
-                            loginActivity.connectionError(App.PARSE_ERROR);
+                            responseCode = App.PARSE_ERROR;
+                            apiResponse.responseError(LoginAPI.this);
                         }
                     }
                 },
@@ -52,16 +51,17 @@ public class LoginAPI {
                     public void onErrorResponse(VolleyError error) {
                         NetworkResponse er = error.networkResponse;
                         if(er != null && er.statusCode == 400) {
-                            loginActivity.loginFailure();
+                            responseCode = App.HTTP_400;
                             Log.i("Login", "Bad login or password");
                         } else if(er != null && er.statusCode == 403) {
-                            loginActivity.connectionError(App.UNAUTHENTICATED);
+                            responseCode = App.HTTP_403;
                             Log.d("Login", "Bad role");
                         } else {
                             error.printStackTrace();
+                            responseCode = App.CONNECTION_ERROR;
                             Log.d("Login", "Connection error");
-                            loginActivity.connectionError(App.CONNECTION_ERROR);
                         }
+                        apiResponse.responseError(LoginAPI.this);
                     }
                 }
         ) {
@@ -72,7 +72,11 @@ public class LoginAPI {
             }
         };
 
-        Volley.newRequestQueue(loginActivity).add(loginRequest);
+        Volley.newRequestQueue(context).add(loginRequest);
+    }
+
+    public String getToken() {
+        return token;
     }
 }
 

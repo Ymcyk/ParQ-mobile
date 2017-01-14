@@ -7,12 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.parq.parq.connection.BuyTicketsAPI;
+import com.parq.parq.connection.AbstractAPI;
+import com.parq.parq.connection.APIResponse;
+import com.parq.parq.connection.PostTicketAPI;
+import com.parq.parq.connection.VehicleListAPI;
 import com.parq.parq.models.Ticket;
 import com.parq.parq.models.Vehicle;
 
@@ -20,7 +22,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class BuyTicketActivity extends AppCompatActivity implements View.OnClickListener {
+public class BuyTicketActivity extends AppCompatActivity implements View.OnClickListener, APIResponse {
     private Button fromLabel;
     private Button toLabel;
     private Spinner vehiclesSpinner;
@@ -30,17 +32,17 @@ public class BuyTicketActivity extends AppCompatActivity implements View.OnClick
     private TimePickerDialog fromDialog;
     private TimePickerDialog toDialog;
 
-    private BuyTicketsAPI api;
+    private PostTicketAPI postTicketApi;
+    private VehicleListAPI vehicleListAPI;
 
     private Ticket ticket;
-    private Bundle mBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy_ticket);
 
-        mBundle = getIntent().getExtras();
+        Bundle mBundle = getIntent().getExtras();
 
         ticket = new Ticket(
                 mBundle.getInt("year"),
@@ -49,7 +51,8 @@ public class BuyTicketActivity extends AppCompatActivity implements View.OnClick
         );
         ticket.setParkingId(mBundle.getInt("parkingId"));
 
-        api = new BuyTicketsAPI(this);
+        postTicketApi = new PostTicketAPI(getApplicationContext(), this);
+        vehicleListAPI = new VehicleListAPI(getApplicationContext(), this);
 
         setViews();
 
@@ -106,38 +109,7 @@ public class BuyTicketActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onStart() {
         super.onStart();
-
-        api.requestVehiclesList();
-    }
-
-    public void vehicleListRequestSuccess(List<Vehicle> list) {
-        this.adapter.clear();
-        this.adapter.notifyDataSetChanged();
-
-        this.adapter.addAll(list);
-        this.adapter.notifyDataSetChanged();
-    }
-
-    public void ticketPostSuccess() {
-        Toast.makeText(this, "Added new ticket", Toast.LENGTH_LONG).show();
-        finish();
-    }
-
-    public void connectionError(int errorCode) {
-        switch (errorCode){
-            case App.UNAUTHENTICATED:
-                Toast.makeText(this, "Unauthenticated", Toast.LENGTH_LONG).show();
-                break;
-            case App.CONNECTION_ERROR:
-                Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
-                break;
-            case App.PARSE_ERROR:
-                Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
-                break;
-            case App.NOT_ACCEPTABLE:
-                Toast.makeText(this, "Not enough money", Toast.LENGTH_LONG).show();
-                break;
-        }
+        vehicleListAPI.requestVehicleList();
     }
 
     @Override
@@ -150,7 +122,42 @@ public class BuyTicketActivity extends AppCompatActivity implements View.OnClick
             Vehicle vehicle = (Vehicle) vehiclesSpinner.getSelectedItem();
             ticket.setVehicleId(vehicle.getId());
             Log.i("Ticket", ticket.toString());
-            api.postTicket(ticket);
+            postTicketApi.postTicket(ticket);
+        }
+    }
+
+    @Override
+    public void responseSuccess(AbstractAPI abstractAPI) {
+        if(abstractAPI == this.vehicleListAPI) {
+            List<Vehicle> list = this.vehicleListAPI.getVehicleList();
+            this.adapter.clear();
+            this.adapter.notifyDataSetChanged();
+
+            this.adapter.addAll(list);
+            this.adapter.notifyDataSetChanged();
+        } else if(abstractAPI == this.postTicketApi) {
+            Toast.makeText(this, "Added new ticket", Toast.LENGTH_LONG).show();
+            finish();
+        }
+    }
+
+    @Override
+    public void responseError(AbstractAPI abstractAPI) {
+        switch(abstractAPI.getResponseCode()) {
+            case App.HTTP_401:
+            case App.HTTP_403:
+                Toast.makeText(this, "Unauthenticated", Toast.LENGTH_LONG).show();
+                break;
+            case App.HTTP_406:
+                Toast.makeText(this, "Not enough money", Toast.LENGTH_LONG).show();
+                break;
+            case App.PARSE_ERROR:
+                Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
+                break;
+            case App.CONNECTION_ERROR:
+            default:
+                Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
+                break;
         }
     }
 }

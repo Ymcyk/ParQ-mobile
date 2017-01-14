@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.parq.parq.connection.AbstractAPI;
+import com.parq.parq.connection.APIResponse;
 import com.parq.parq.models.Vehicle;
 import com.parq.parq.connection.VehicleListAPI;
 
 import java.util.List;
 
-public class VehicleListActivity extends ListActivity {
+public class VehicleListActivity extends ListActivity implements APIResponse {
     private VehicleListAPI api;
     private ArrayAdapter<Vehicle> adapter;
 
@@ -24,7 +26,7 @@ public class VehicleListActivity extends ListActivity {
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         setListAdapter(this.adapter);
 
-        api = new VehicleListAPI(this);
+        api = new VehicleListAPI(getApplicationContext(), this);
     }
 
     @Override
@@ -38,25 +40,33 @@ public class VehicleListActivity extends ListActivity {
         startActivity(intent);
     }
 
-    public void vehicleListRequestSuccess(List<Vehicle> list){
-        this.adapter.clear();
-        this.adapter.notifyDataSetChanged();
+    @Override
+    public void responseSuccess(AbstractAPI abstractAPI) {
+        if(abstractAPI == this.api){
+            List<Vehicle> list = this.api.getVehicleList();
+            this.adapter.clear();
+            this.adapter.notifyDataSetChanged();
 
-        this.adapter.addAll(list);
-        this.adapter.notifyDataSetChanged();
+            this.adapter.addAll(list);
+            this.adapter.notifyDataSetChanged();
+        }
     }
 
-    public void connectionError(int errorCode) {
-        switch (errorCode){
-            case App.UNAUTHENTICATED:
-                Toast.makeText(this, "Unauthenticated", Toast.LENGTH_LONG).show();
-                break;
-            case App.CONNECTION_ERROR:
-                Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
-                break;
-            case App.PARSE_ERROR:
-                Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
-                break;
+    @Override
+    public void responseError(AbstractAPI abstractAPI) {
+        if(abstractAPI == this.api){
+            switch(abstractAPI.getResponseCode()) {
+                case App.HTTP_401:
+                    Toast.makeText(this, "Unauthenticated", Toast.LENGTH_LONG).show();
+                    break;
+                case App.PARSE_ERROR:
+                    Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
+                    break;
+                case App.CONNECTION_ERROR:
+                default:
+                    Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
+                    break;
+            }
         }
     }
 }

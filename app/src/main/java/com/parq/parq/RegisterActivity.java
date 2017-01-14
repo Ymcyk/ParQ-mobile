@@ -9,10 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.parq.parq.connection.AbstractAPI;
+import com.parq.parq.connection.APIResponse;
 import com.parq.parq.connection.RegisterAPI;
 import com.parq.parq.models.Profile;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements APIResponse {
     private EditText usernameLabel;
     private EditText emailLabel;
     private EditText passwordLabel;
@@ -27,7 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         setViews();
 
-        api = new RegisterAPI(this);
+        api = new RegisterAPI(getApplicationContext(), this);
     }
 
     private void setViews() {
@@ -49,28 +51,6 @@ public class RegisterActivity extends AppCompatActivity {
         profile.setPassword(passwordLabel.getText().toString());
 
         api.postDriver(profile);
-    }
-
-    public void registerPostSuccess(){
-        Toast.makeText(this, "User added", Toast.LENGTH_LONG).show();
-        finish();
-    }
-
-    public void connectionError(int errorCode) {
-        switch (errorCode){
-            case App.UNAUTHENTICATED:
-                Toast.makeText(this, "Unauthenticated", Toast.LENGTH_LONG).show();
-                break;
-            case App.CONNECTION_ERROR:
-                Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
-                break;
-            case App.PARSE_ERROR:
-                Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
-                break;
-            case App.USER_EXIST:
-                Toast.makeText(this, "Username already exist", Toast.LENGTH_LONG).show();
-                break;
-        }
     }
 
     private TextWatcher registerTextWatcher = new TextWatcher() {
@@ -97,5 +77,34 @@ public class RegisterActivity extends AppCompatActivity {
             registerButton.setEnabled(false);
         else
             registerButton.setEnabled(true);
+    }
+
+    @Override
+    public void responseSuccess(AbstractAPI abstractAPI) {
+        if(abstractAPI == this.api) {
+            Toast.makeText(this, "User added", Toast.LENGTH_LONG).show();
+            finish();
+        }
+    }
+
+    @Override
+    public void responseError(AbstractAPI abstractAPI) {
+        if(abstractAPI == this.api) {
+            switch (abstractAPI.getResponseCode()){
+                case App.HTTP_401:
+                    Toast.makeText(this, "Unauthenticated", Toast.LENGTH_LONG).show();
+                    break;
+                case App.PARSE_ERROR:
+                    Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
+                    break;
+                case App.HTTP_400:
+                    Toast.makeText(this, "Username already exist", Toast.LENGTH_LONG).show();
+                    break;
+                case App.CONNECTION_ERROR:
+                default:
+                    Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
+                    break;
+            }
+        }
     }
 }

@@ -13,10 +13,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.parq.parq.connection.AbstractAPI;
+import com.parq.parq.connection.APIResponse;
 import com.parq.parq.connection.LoginAPI;
 import com.parq.parq.connection.ParQURLConstructor;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, APIResponse {
     private EditText usernameLabel;
     private EditText passwordLabel;
     private Button loginButton;
@@ -34,7 +36,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         showTypeUrlDialog();
 
         setApp();
-        api = new LoginAPI(this);
+        api = new LoginAPI(getApplicationContext(), this);
     }
 
     private void setViews() {
@@ -59,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         App.setSharedPref(sharedPref);
         App.setUrl(url);
     }
-
+/*
     public void loginSuccess(String token) {
         App.setToken(token);
         Intent intent = new Intent(this, MenuActivity.class);
@@ -83,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
-
+*/
     private TextWatcher loginTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -132,5 +134,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public void startRegisterActivity(){
         startActivity(new Intent(this, RegisterActivity.class));
+    }
+
+    @Override
+    public void responseSuccess(AbstractAPI api) {
+        if(this.api == api) {
+            App.setToken(this.api.getToken());
+            Intent intent = new Intent(this, MenuActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void responseError(AbstractAPI api) {
+        if(this.api == api){
+            switch(this.api.getResponseCode()){
+                case App.HTTP_400:
+                    Toast.makeText(this, "Bad login or password", Toast.LENGTH_LONG).show();
+                    break;
+                case App.HTTP_403:
+                    Toast.makeText(this, "Only drivers can login", Toast.LENGTH_SHORT).show();
+                    break;
+                case App.PARSE_ERROR:
+                    Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
+                    break;
+                case App.CONNECTION_ERROR:
+                    Toast.makeText(this, "Connection error", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
     }
 }

@@ -44,7 +44,7 @@
     <!-- activity_buy_tickets -->
     <string name="vehicles">Vehicles</string>
     <!-- ParQ API URL -->
-    <string name="url_login">api-token-auth/</string>
+    <string name="url_login">login/</string>
     <string name="url_current">current/</string>
     <string name="url_tickets">tickets/</string>
     <string name="url_vehicles">vehicles/</string>

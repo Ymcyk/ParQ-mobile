@@ -1,5 +1,6 @@
 package com.parq.parq.connection;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -9,7 +10,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.parq.parq.App;
-import com.parq.parq.RegisterActivity;
 import com.parq.parq.models.Profile;
 
 import org.json.JSONException;
@@ -19,11 +19,10 @@ import org.json.JSONObject;
  * Created by piotr on 10.01.17.
  */
 
-public class RegisterAPI {
-    private RegisterActivity registerActivity;
+public class RegisterAPI extends AbstractAPI {
 
-    public RegisterAPI(RegisterActivity registerActivity) {
-        this.registerActivity = registerActivity;
+    public RegisterAPI(Context context, APIResponse apiResponse) {
+        super(context, apiResponse);
     }
 
     public void postDriver(Profile profile) {
@@ -40,13 +39,14 @@ public class RegisterAPI {
             e.printStackTrace();
         }
 
-        JsonObjectRequest addDriverPost = new JsonObjectRequest(Request.Method.POST, App.getUrl().getRegisterURL(),
+        JsonObjectRequest driverPost = new JsonObjectRequest(Request.Method.POST, App.getUrl().getRegisterURL(),
                 driverJson,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("postDriver", "Response success");
-                        registerActivity.registerPostSuccess();
+                        responseCode = App.HTTP_2xx;
+                        apiResponse.responseSuccess(RegisterAPI.this);
                     }
                 },
                 new Response.ErrorListener() {
@@ -55,35 +55,37 @@ public class RegisterAPI {
 
                         if(error.networkResponse != null){
                             if(error.networkResponse.statusCode == 401) {
-                                registerActivity.connectionError(App.UNAUTHENTICATED);
+                                responseCode = App.HTTP_401;
                                 Log.d("postDriver", "Bad token 401");
                                 return;
                             } else if(error.networkResponse.statusCode == 403) {
-                                registerActivity.connectionError(App.UNAUTHENTICATED);
+                                responseCode = App.HTTP_403;
                                 Log.d("postDriver", "Bad role 403");
                                 return;
                             } else if(error.networkResponse.statusCode == 400) {
-                                registerActivity.connectionError(App.USER_EXIST);
+                                responseCode = App.HTTP_400;
                                 Log.d("postDriver", "Username exist 400");
                                 return;
                             }
+                        } else {
+                            responseCode = App.CONNECTION_ERROR;
                         }
 
                         error.printStackTrace();
                         Log.d("postDriver", "Connection error");
-                        registerActivity.connectionError(App.CONNECTION_ERROR);
+                        apiResponse.responseError(RegisterAPI.this);
                     }
                 }
         ) {
 
         };
-        addDriverPost.setRetryPolicy(
+        driverPost.setRetryPolicy(
                 new DefaultRetryPolicy(
                         DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
                         1,
                         DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
                 )
         );
-        Volley.newRequestQueue(registerActivity).add(addDriverPost);
+        Volley.newRequestQueue(context).add(driverPost);
     }
 }

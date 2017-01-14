@@ -13,11 +13,14 @@ public class App {
     private static ParQURLConstructor url;
     private static String token;
 
-    public final static int PARSE_ERROR = 0;
-    public final static int CONNECTION_ERROR = 1;
-    public final static int UNAUTHENTICATED = 2;
-    public final static int NOT_ACCEPTABLE = 3;
-    public final static int USER_EXIST = 4;
+    public final static int HTTP_400 = 0;
+    public final static int HTTP_401 = 1;
+    public final static int HTTP_403 = 2;
+    public final static int HTTP_406 = 3;
+    public final static int HTTP_2xx = 4;
+
+    public final static int PARSE_ERROR = 5;
+    public final static int CONNECTION_ERROR = 6;
 
     public static SharedPreferences getSharedPref() {
         return sharedPref;

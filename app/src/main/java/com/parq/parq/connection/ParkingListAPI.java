@@ -10,7 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.parq.parq.App;
-import com.parq.parq.models.Vehicle;
+import com.parq.parq.models.Parking;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,48 +22,48 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by piotr on 30.12.16.
+ * Created by piotr on 14.01.17.
  */
 
-public class VehicleListAPI extends AbstractAPI {
+public class ParkingListAPI extends AbstractAPI {
 
-    private List<Vehicle> vehicleList;
+    private List<Parking> parkingList;
 
-    public VehicleListAPI(Context context, APIResponse apiResponse) {
+    public ParkingListAPI(Context context, APIResponse apiResponse){
         super(context, apiResponse);
     }
 
-    public void requestVehicleList() {
-        StringRequest vehicleListRequest = new StringRequest(Request.Method.GET, App.getUrl().getVehiclesURL(),
+    public void requestParkings() {
+        StringRequest parkingsRequest = new StringRequest(
+                Request.Method.GET,
+                App.getUrl().getParkingsURL(),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             JSONArray array = new JSONArray(response);
 
-                            vehicleList = new LinkedList<>();
-
+                            parkingList = new LinkedList<>();
+                            Log.i("Parking length", String.valueOf(array.length()));
                             for(int i = 0; i < array.length(); i++) {
                                 JSONObject json = array.getJSONObject(i);
-                                Vehicle vehicle = new Vehicle();
+                                Parking parking = new Parking();
 
-                                vehicle.setId(json.getInt("id"));
-                                vehicle.setBadge(json.getString("badge"));
-                                vehicle.setName(json.getString("name"));
-                                vehicle.setPlateCountry(json.getString("plate_country"));
-                                vehicle.setPlateNumber(json.getString("plate_number"));
+                                parking.setId(json.getInt("id"));
+                                parking.setName(json.getString("name"));
+                                parking.setDescription(json.getString("description"));
 
-                                getVehicleList().add(vehicle);
+                                getParkingList().add(parking);
                             }
 
-                            Log.i("VehicleList", "Response and parse success");
+                            Log.i("parkingsList", "Response and parse success");
                             responseCode = App.HTTP_2xx;
-                            apiResponse.responseSuccess(VehicleListAPI.this);
+                            apiResponse.responseSuccess(ParkingListAPI.this);
                         } catch (JSONException e) {
-                            Log.d("VehicleList", "JSON parse error");
+                            Log.d("parkingsList", "JSON parse error");
                             e.printStackTrace();
                             responseCode = App.PARSE_ERROR;
-                            apiResponse.responseError(VehicleListAPI.this);
+                            apiResponse.responseError(ParkingListAPI.this);
                         }
                     }
                 },
@@ -74,10 +74,10 @@ public class VehicleListAPI extends AbstractAPI {
                         if(error.networkResponse != null){
                             if(error.networkResponse.statusCode == 401) {
                                 responseCode = App.HTTP_401;
-                                Log.d("VehicleList", "Bad token 401");
+                                Log.d("parkingsList", "Bad token 401");
                             } else if(error.networkResponse.statusCode == 403) {
                                 responseCode = App.HTTP_403;
-                                Log.d("VehicleList", "Bad role 403");
+                                Log.d("parkingsList", "Bad role 403");
                             }
                         } else {
                             responseCode = App.CONNECTION_ERROR;
@@ -85,7 +85,7 @@ public class VehicleListAPI extends AbstractAPI {
 
                         error.printStackTrace();
                         Log.d("VehicleList", "Connection error");
-                        apiResponse.responseError(VehicleListAPI.this);
+                        apiResponse.responseError(ParkingListAPI.this);
                     }
                 }
         ) {
@@ -97,10 +97,10 @@ public class VehicleListAPI extends AbstractAPI {
             }
         };
 
-        Volley.newRequestQueue(context).add(vehicleListRequest);
+        Volley.newRequestQueue(context).add(parkingsRequest);
     }
 
-    public List<Vehicle> getVehicleList() {
-        return vehicleList;
+    public List<Parking> getParkingList() {
+        return parkingList;
     }
 }

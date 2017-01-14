@@ -11,9 +11,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parq.parq.connection.PaymentAPI;
+import com.parq.parq.connection.AbstractAPI;
+import com.parq.parq.connection.APIResponse;
+import com.parq.parq.connection.PostPaymentAPI;
 import com.parq.parq.models.Profile;
-import com.parq.parq.connection.ProfileAPI;
+import com.parq.parq.connection.GetProfileAPI;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
@@ -25,7 +27,7 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener, APIResponse {
     private TextView usernameText;
     private TextView emailText;
     private TextView walletText;
@@ -33,8 +35,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private EditText amountText;
     private Button payButton;
 
-    private ProfileAPI api;
-    private PaymentAPI paymentApi;
+    private GetProfileAPI api;
+    private PostPaymentAPI postPaymentApi;
 
     public final static int PAYPAL_REQUEST_CODE = 42;
     private static PayPalConfiguration config = new PayPalConfiguration()
@@ -50,8 +52,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         setViews();
 
-        api = new ProfileAPI(this);
-        paymentApi = new PaymentAPI(this);
+        api = new GetProfileAPI(getApplicationContext(), this);
+        postPaymentApi = new PostPaymentAPI(getApplicationContext(), this);
     }
 
     private void setViews() {
@@ -87,31 +89,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     protected void onStart() {
         super.onStart();
         api.requestProfile();
-    }
-
-    public void profileRequestSuccess(Profile profile) {
-        usernameText.setText(profile.getUsername());
-        emailText.setText(profile.getEmail());
-        walletText.setText(profile.getWallet());
-    }
-
-    public void paymentSendSuccess() {
-        Toast.makeText(this, "Payment success", Toast.LENGTH_LONG).show();
-        api.requestProfile();
-    }
-
-    public void connectionError(int errorCode) {
-        switch (errorCode){
-            case App.UNAUTHENTICATED:
-                Toast.makeText(this, "Unauthenticated", Toast.LENGTH_LONG).show();
-                break;
-            case App.CONNECTION_ERROR:
-                Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
-                break;
-            case App.PARSE_ERROR:
-                Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
-                break;
-        }
     }
 
     @Override
@@ -155,9 +132,40 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
             String id = jsonResponse.getString("id");
 
-            paymentApi.postPayment(id, Double.valueOf(paymentAmount));
+            postPaymentApi.postPayment(id, Double.valueOf(paymentAmount));
         } catch (JSONException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void responseSuccess(AbstractAPI abstractAPI) {
+        if(this.api == abstractAPI) {
+            Profile profile = this.api.getProfile();
+            usernameText.setText(profile.getUsername());
+            emailText.setText(profile.getEmail());
+            walletText.setText(profile.getWallet());
+        } else if(this.postPaymentApi == abstractAPI) {
+            Toast.makeText(this, "Payment success", Toast.LENGTH_LONG).show();
+            api.requestProfile();
+        }
+    }
+
+    @Override
+    public void responseError(AbstractAPI abstractAPI) {
+        if(this.api == abstractAPI || this.postPaymentApi == abstractAPI){
+            switch (this.api.getResponseCode()) {
+                case App.HTTP_401:
+                    Toast.makeText(this, "Unauthenticated", Toast.LENGTH_LONG).show();
+                    break;
+                case App.PARSE_ERROR:
+                    Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
+                    break;
+                case App.CONNECTION_ERROR:
+                default:
+                    Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
+                    break;
+            }
         }
     }
 }
