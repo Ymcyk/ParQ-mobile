@@ -12,6 +12,8 @@ import com.android.volley.toolbox.Volley;
 import com.parq.parq.App;
 import com.parq.parq.models.Parking;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,6 +54,15 @@ public class ParkingListAPI extends AbstractAPI {
                                 parking.setId(json.getInt("id"));
                                 parking.setName(json.getString("name"));
                                 parking.setDescription(json.getString("description"));
+
+                                JSONObject open = json.getJSONObject("open");
+
+                                if(open.has("start") && open.has("end")){
+                                    DateTime start = DateTime.parse(open.getString("start"));
+                                    start = start.withZone(DateTimeZone.getDefault());
+                                    parking.setStart(start);
+                                    parking.setEnd(DateTime.parse(open.getString("end")));
+                                }
 
                                 getParkingList().add(parking);
                             }

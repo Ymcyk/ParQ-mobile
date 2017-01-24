@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">ParQ</string>
     <!-- activity_login -->
-    <string name="username">Username</string>
-    <string name="password">Password</string>
-    <string name="login">Login</string>
-    <string name="register">Register</string>
+    <string name="username">Nazwa użytkownika</string>
+    <string name="password">Hasło</string>
+    <string name="login">Zaloguj</string>
+    <string name="register">Zarejestruj</string>
     <!-- activity_register -->
 
     <!-- activity_menu -->
@@ -18,17 +18,17 @@
     <!-- activity_profile -->
     <string name="email">email</string>
     <string name="wallet">wallet</string>
-    <string name="enter_amount">Enter amount</string>
-    <string name="pay_now">Pay now</string>
+    <string name="enter_amount">Podaj kwotę</string>
+    <string name="pay_now">Zapłać</string>
     <!-- fragment_type_url -->
-    <string name="type_url">Type URL</string>
+    <string name="type_url">Podaj adres serwera</string>
     <string name="ok">OK</string>
     <!-- activity_vehicle_list -->
-    <string name="add_vehicle">Add vehicle</string>
+    <string name="add_vehicle">Dodaj pojazd</string>
     <!-- activity_add_vehicle -->
-    <string name="name">Name</string>
-    <string name="plate_country">Plate country</string>
-    <string name="plate_number">Plate number</string>
+    <string name="name">Nazwa</string>
+    <string name="plate_country">Kraj</string>
+    <string name="plate_number">Numer rejestracji</string>
     <string-array name="countries">
         <item>PL</item>
         <item>DE</item>
@@ -55,4 +55,13 @@
     <!-- SharedPreferences -->
     <string name="sharedpref_file_key">org.parq.parqofficer.sharedpref</string>
     <string name="sharedpref_url_slug">url</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

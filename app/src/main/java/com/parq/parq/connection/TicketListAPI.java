@@ -12,6 +12,8 @@ import com.android.volley.toolbox.Volley;
 import com.parq.parq.App;
 import com.parq.parq.models.Ticket;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,10 +40,10 @@ public class TicketListAPI extends AbstractAPI {
         super(context, apiResponse);
     }
 
-    public void requestTickets(int parkingId) {
+    public void requestTickets() {
         StringRequest ticketsRequest = new StringRequest(
                 Request.Method.GET,
-                App.getUrl().getTicketByParkingURL(String.valueOf(parkingId)),
+                App.getUrl().getTicketListURL(),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -56,28 +58,21 @@ public class TicketListAPI extends AbstractAPI {
                                 JSONObject json = array.getJSONObject(i);
                                 Ticket ticket = new Ticket();
 
-                                try {
-                                    Date start = sdf.parse(json.getString("start"));
-                                    Date end = sdf.parse(json.getString("end"));
+                                DateTime start = DateTime.parse(json.getString("start"));
+                                start = start.withZone(DateTimeZone.getDefault());
 
-                                    Calendar startCal = Calendar.getInstance();
-                                    startCal.setTime(start);
-                                    ticket.setStart(startCal);
+                                DateTime end = DateTime.parse(json.getString("end"));
+                                end = end.withZone(DateTimeZone.getDefault());
 
-                                    Calendar endCal = Calendar.getInstance();
-                                    endCal.setTime(end);
-                                    ticket.setEnd(endCal);
+                                ticket.setStart(start);
+                                ticket.setEnd(end);
 
-                                    //Log.i("start hour", String.valueOf(startCal.get(Calendar.HOUR_OF_DAY)));
-                                    //Log.i("end hour", String.valueOf(endCal.get(Calendar.HOUR_OF_DAY)));
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                    responseCode = App.PARSE_ERROR;
-                                    apiResponse.responseError(TicketListAPI.this);
-                                }
 
                                 JSONObject veh = json.getJSONObject("vehicle");
                                 ticket.setName(veh.getString("name"));
+
+                                JSONObject parking = json.getJSONObject("parking");
+                                ticket.setParkingName(parking.getString("name"));
 
                                 getTicketList().add(ticket);
                             }

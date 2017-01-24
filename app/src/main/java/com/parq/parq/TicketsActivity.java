@@ -83,7 +83,7 @@ public class TicketsActivity extends AppCompatActivity implements View.OnClickLi
     protected void onStart() {
         super.onStart();
         parkingListAPI.requestParkings();
-        ticketListAPI.requestTickets(1);
+        //ticketListAPI.requestTickets(1);
     }
 
     private void setDateLabel() {
@@ -215,15 +215,15 @@ class TwoLineAdapter extends ArrayAdapter<Ticket> {
         TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 
         text1.setText(list.get(position).getName());
-
+/*
         Calendar start = list.get(position).getStart();
         Calendar end = list.get(position).getEnd();
         String text = String.format(Locale.ENGLISH, "%02d:%02d-%02d:%02d %04d-%02d-%02d",
                 start.get(Calendar.HOUR_OF_DAY), start.get(Calendar.MINUTE),
                 end.get(Calendar.HOUR_OF_DAY), end.get(Calendar.MINUTE),
                 start.get(Calendar.YEAR), start.get(Calendar.MONTH)+1, start.get(Calendar.DAY_OF_MONTH));
-
-        text2.setText(text);
+*/
+        text2.setText("");
 
         return view;
     }

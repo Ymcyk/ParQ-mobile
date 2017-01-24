@@ -32,7 +32,7 @@ public class MenuActivity extends AppCompatActivity implements AdapterView.OnIte
                 startActivity(new Intent(this, VehicleListActivity.class));
                 break;
             case 3:
-                Toast.makeText(this, "Opcja 4", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
                 break;
         }
     }

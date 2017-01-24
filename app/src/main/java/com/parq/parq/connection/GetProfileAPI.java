@@ -40,9 +40,9 @@ public class GetProfileAPI extends AbstractAPI {
                             JSONObject jsonResponse = new JSONObject(response);
                             JSONObject userJSON = jsonResponse.getJSONObject("user");
 
-                            getProfile().setUsername(userJSON.getString("username"));
-                            getProfile().setEmail(userJSON.getString("email"));
-                            getProfile().setWallet(jsonResponse.getString("wallet"));
+                            profile.setUsername(userJSON.getString("username"));
+                            profile.setEmail(userJSON.getString("email"));
+                            profile.setWallet(jsonResponse.getString("wallet"));
 
                             Log.i("Profile", "Response and parse success");
                             responseCode = App.HTTP_2xx;

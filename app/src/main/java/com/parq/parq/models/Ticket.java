@@ -1,5 +1,7 @@
 package com.parq.parq.models;
 
+import org.joda.time.DateTime;
+
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -8,36 +10,29 @@ import java.util.Locale;
  */
 
 public class Ticket {
-    private Calendar start;
-    private Calendar end;
+    private DateTime start;
+    private DateTime end;
     private int parkingId;
+    private String parkingName;
     private int vehicleId;
     private String name;
+    private String minutes;
 
     public Ticket() {}
 
-    public Ticket(int year, int month, int day) {
-        start = Calendar.getInstance();
-        end = Calendar.getInstance();
-
-        start.set(year, month, day);
-        end.set(year, month, day);
-    }
-
-
-    public Calendar getStart() {
+    public DateTime getStart() {
         return start;
     }
 
-    public void setStart(Calendar start) {
+    public void setStart(DateTime start) {
         this.start = start;
     }
 
-    public Calendar getEnd() {
+    public DateTime getEnd() {
         return end;
     }
 
-    public void setEnd(Calendar end) {
+    public void setEnd(DateTime end) {
         this.end = end;
     }
 
@@ -57,20 +52,27 @@ public class Ticket {
         this.vehicleId = vehicleId;
     }
 
-    @Override
-    public String toString() {
-        return String.format(Locale.ENGLISH, "start: %d-%02d-%02d %02d:%02d end: %d-%02d-%02d %02d:%02d",
-                start.get(Calendar.YEAR), start.get(Calendar.MONTH), start.get(Calendar.DAY_OF_MONTH),
-                start.get(Calendar.HOUR_OF_DAY), start.get(Calendar.MINUTE),
-                end.get(Calendar.YEAR), end.get(Calendar.MONTH), end.get(Calendar.DAY_OF_MONTH),
-                end.get(Calendar.HOUR_OF_DAY), end.get(Calendar.MINUTE));
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getParkingName() {
+        return parkingName;
+    }
+
+    public void setParkingName(String parkingName) {
+        this.parkingName = parkingName;
+    }
+
+    public String getMinutes() {
+        return minutes;
+    }
+
+    public void setMinutes(String minutes) {
+        this.minutes = minutes;
     }
 }

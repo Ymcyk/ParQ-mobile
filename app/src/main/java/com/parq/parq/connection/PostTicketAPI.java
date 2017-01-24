@@ -32,28 +32,10 @@ public class PostTicketAPI extends AbstractAPI {
     }
 
     public void postTicket(Ticket ticket) {
-        Calendar startCal = ticket.getStart();
-        String start = String.format(Locale.ENGLISH,
-                "%d-%02d-%02dT%02d:%02d:00Z",
-                startCal.get(Calendar.YEAR),
-                startCal.get(Calendar.MONTH)+1,
-                startCal.get(Calendar.DAY_OF_MONTH),
-                startCal.get(Calendar.HOUR_OF_DAY),
-                startCal.get(Calendar.MINUTE));
-
-        Calendar endCal = ticket.getEnd();
-        String end = String.format(Locale.ENGLISH,
-                "%d-%02d-%02dT%02d:%02d:00Z",
-                endCal.get(Calendar.YEAR),
-                endCal.get(Calendar.MONTH)+1,
-                endCal.get(Calendar.DAY_OF_MONTH),
-                endCal.get(Calendar.HOUR_OF_DAY),
-                endCal.get(Calendar.MINUTE));
 
         JSONObject postJson = new JSONObject();
         try {
-            postJson.put("start", start);
-            postJson.put("end", end);
+            postJson.put("minutes", String.valueOf(ticket.getMinutes()));
             postJson.put("vehicle", String.valueOf(ticket.getVehicleId()));
             postJson.put("parking", String.valueOf(ticket.getParkingId()));
         } catch (JSONException e) {

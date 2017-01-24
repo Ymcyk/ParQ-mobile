@@ -27,7 +27,11 @@
         <activity android:name=".AddVehicleActivity" />
         <activity android:name=".TicketsActivity" />
         <activity android:name=".BuyTicketActivity" />
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

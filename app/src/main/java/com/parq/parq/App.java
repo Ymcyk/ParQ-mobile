@@ -3,6 +3,10 @@ package com.parq.parq;
 import android.content.SharedPreferences;
 
 import com.parq.parq.connection.ParQURLConstructor;
+import com.parq.parq.models.Parking;
+import com.parq.parq.models.Profile;
+
+import java.util.List;
 
 /**
  * Created by piotr on 29.12.16.
@@ -12,6 +16,16 @@ public class App {
     private static SharedPreferences sharedPref;
     private static ParQURLConstructor url;
     private static String token;
+    private static Profile profile;
+    private static List<Parking> parkingList;
+
+    public static List<Parking> getParkingList() {
+        return parkingList;
+    }
+
+    public static void setParkingList(List<Parking> parkingList) {
+        App.parkingList = parkingList;
+    }
 
     public final static int HTTP_400 = 0;
     public final static int HTTP_401 = 1;
@@ -44,5 +58,13 @@ public class App {
 
     public static void setToken(String token) {
         App.token = token;
+    }
+
+    public static Profile getProfile() {
+        return profile;
+    }
+
+    public static void setProfile(Profile profile) {
+        App.profile = profile;
     }
 }

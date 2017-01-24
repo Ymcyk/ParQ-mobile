@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,8 +16,12 @@ import android.widget.Toast;
 
 import com.parq.parq.connection.AbstractAPI;
 import com.parq.parq.connection.APIResponse;
+import com.parq.parq.connection.GetProfileAPI;
 import com.parq.parq.connection.LoginAPI;
 import com.parq.parq.connection.ParQURLConstructor;
+import com.parq.parq.models.Profile;
+
+import net.danlew.android.joda.JodaTimeAndroid;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, APIResponse {
     private EditText usernameLabel;
@@ -24,19 +29,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button loginButton;
     private Button registerButton;
 
-    private LoginAPI api;
+    private LoginAPI loginAPI;
+    private GetProfileAPI profileAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        //startActivity(new Intent(this, MainActivity.class));
         setViews();
 
         showTypeUrlDialog();
-
+        JodaTimeAndroid.init(this);
         setApp();
-        api = new LoginAPI(getApplicationContext(), this);
+
+        loginAPI = new LoginAPI(getApplicationContext(), this);
+        profileAPI = new GetProfileAPI(getApplicationContext(), this);
     }
 
     private void setViews() {
@@ -61,31 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         App.setSharedPref(sharedPref);
         App.setUrl(url);
     }
-/*
-    public void loginSuccess(String token) {
-        App.setToken(token);
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
-    }
 
-    public void loginFailure() {
-        Toast.makeText(this, "Bad login or password", Toast.LENGTH_LONG).show();
-    }
-
-    public void connectionError(int errorCode) {
-        switch (errorCode){
-            case App.PARSE_ERROR:
-                Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
-                break;
-            case App.CONNECTION_ERROR:
-                Toast.makeText(this, "Connection error", Toast.LENGTH_SHORT).show();
-                break;
-            case App.UNAUTHENTICATED:
-                Toast.makeText(this, "Only drivers can login", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-*/
     private TextWatcher loginTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -129,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void sendLoginRequest() {
         String username = usernameLabel.getText().toString();
         String password = passwordLabel.getText().toString();
-        api.login(username, password);
+        loginAPI.login(username, password);
     }
 
     public void startRegisterActivity(){
@@ -138,30 +122,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void responseSuccess(AbstractAPI api) {
-        if(this.api == api) {
-            App.setToken(this.api.getToken());
-            Intent intent = new Intent(this, MenuActivity.class);
-            startActivity(intent);
+        if(this.loginAPI == api) {
+            App.setToken(this.loginAPI.getToken());
+            //Intent intent = new Intent(this, MenuActivity.class);
+            //Intent intent = new Intent(this, MainActivity.class);
+            //startActivity(intent);
+            profileAPI.requestProfile();
+        } else if(api == this.profileAPI) {
+            Profile profile = this.profileAPI.getProfile();
+            App.setProfile(profile);
+            startActivity(new Intent(this, MainActivity.class));
         }
     }
 
     @Override
     public void responseError(AbstractAPI api) {
-        if(this.api == api){
-            switch(this.api.getResponseCode()){
-                case App.HTTP_400:
-                    Toast.makeText(this, "Bad login or password", Toast.LENGTH_LONG).show();
-                    break;
-                case App.HTTP_403:
-                    Toast.makeText(this, "Only drivers can login", Toast.LENGTH_SHORT).show();
-                    break;
-                case App.PARSE_ERROR:
-                    Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
-                    break;
-                case App.CONNECTION_ERROR:
-                    Toast.makeText(this, "Connection error", Toast.LENGTH_SHORT).show();
-                    break;
-            }
+
+        switch(this.loginAPI.getResponseCode()){
+            case App.HTTP_400:
+                Toast.makeText(this, "Bad login or password", Toast.LENGTH_LONG).show();
+                break;
+            case App.HTTP_403:
+                Toast.makeText(this, "Only drivers can login", Toast.LENGTH_SHORT).show();
+                break;
+            case App.PARSE_ERROR:
+                Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
+                break;
+            case App.CONNECTION_ERROR:
+            default:
+                Toast.makeText(this, "Connection error", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 }

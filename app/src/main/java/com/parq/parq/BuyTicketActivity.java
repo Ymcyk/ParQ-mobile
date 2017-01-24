@@ -43,12 +43,12 @@ public class BuyTicketActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_buy_ticket);
 
         Bundle mBundle = getIntent().getExtras();
-
+/*
         ticket = new Ticket(
                 mBundle.getInt("year"),
                 mBundle.getInt("month"),
                 mBundle.getInt("day")
-        );
+        );*/
         ticket.setParkingId(mBundle.getInt("parkingId"));
 
         postTicketApi = new PostTicketAPI(getApplicationContext(), this);
@@ -71,7 +71,7 @@ public class BuyTicketActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void setTimeLabels(final Ticket ticket) {
-        fromLabel.setOnClickListener(this);
+        /*fromLabel.setOnClickListener(this);
         toLabel.setOnClickListener(this);
 
         fromLabel.setText(String.format(Locale.ENGLISH, "%02d:%02d",
@@ -103,7 +103,7 @@ public class BuyTicketActivity extends AppCompatActivity implements View.OnClick
                 ticket.getEnd().set(Calendar.HOUR_OF_DAY, hour);
                 ticket.getEnd().set(Calendar.MINUTE, minute);
             }
-        }, newCalendar.get(Calendar.HOUR_OF_DAY), newCalendar.get(Calendar.MINUTE), true);
+        }, newCalendar.get(Calendar.HOUR_OF_DAY), newCalendar.get(Calendar.MINUTE), true);*/
     }
 
     @Override
