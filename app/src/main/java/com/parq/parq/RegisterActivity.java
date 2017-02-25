@@ -82,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity implements APIResponse {
     @Override
     public void responseSuccess(AbstractAPI abstractAPI) {
         if(abstractAPI == this.api) {
-            Toast.makeText(this, "User added", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Użytkownik dodany", Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -92,17 +92,17 @@ public class RegisterActivity extends AppCompatActivity implements APIResponse {
         if(abstractAPI == this.api) {
             switch (abstractAPI.getResponseCode()){
                 case App.HTTP_401:
-                    Toast.makeText(this, "Unauthenticated", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Brak uprawnień", Toast.LENGTH_LONG).show();
                     break;
                 case App.PARSE_ERROR:
-                    Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Błąd parsowania", Toast.LENGTH_LONG).show();
                     break;
                 case App.HTTP_400:
-                    Toast.makeText(this, "Username already exist", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Taka nazwa już istnieje", Toast.LENGTH_LONG).show();
                     break;
                 case App.CONNECTION_ERROR:
                 default:
-                    Toast.makeText(this, "Connection error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Błąd połączenia", Toast.LENGTH_LONG).show();
                     break;
             }
         }

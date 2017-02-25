@@ -77,14 +77,14 @@ public class DashboardActualTicketFragment extends ListFragment implements APIRe
         switch(abstractAPI.getResponseCode()) {
             case App.HTTP_401:
             case App.HTTP_403:
-                Toast.makeText(getContext(), "Unauthenticated", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Brak uprawnień", Toast.LENGTH_LONG).show();
                 break;
             case App.PARSE_ERROR:
-                Toast.makeText(getContext(), "Parse error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Błąd parsowania", Toast.LENGTH_LONG).show();
                 break;
             case App.CONNECTION_ERROR:
             default:
-                Toast.makeText(getContext(), "Connection error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Brak połączenia", Toast.LENGTH_LONG).show();
                 break;
         }
     }

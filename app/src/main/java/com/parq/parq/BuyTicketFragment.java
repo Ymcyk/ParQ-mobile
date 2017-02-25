@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +20,10 @@ import android.widget.Toast;
 
 import com.parq.parq.connection.APIResponse;
 import com.parq.parq.connection.AbstractAPI;
+import com.parq.parq.connection.GetProfileAPI;
 import com.parq.parq.connection.PostTicketAPI;
 import com.parq.parq.models.Parking;
+import com.parq.parq.models.Profile;
 import com.parq.parq.models.Ticket;
 
 import org.joda.time.DateTime;
@@ -35,6 +39,7 @@ public class BuyTicketFragment extends Fragment implements View.OnClickListener,
     private Spinner parkingSpinner;
     private EditText minuteLabel;
     private Button acceptButton;
+
     private PostTicketAPI postTicketAPI;
 
     private ArrayAdapter<Parking> adapter;
@@ -54,12 +59,37 @@ public class BuyTicketFragment extends Fragment implements View.OnClickListener,
         parkingSpinner.setAdapter(adapter);
 
         minuteLabel = (EditText) view.findViewById(R.id.minutes_label);
+        minuteLabel.addTextChangedListener(minuteTextWatcher);
         acceptButton = (Button) view.findViewById(R.id.accept_ticket_button);
         acceptButton.setOnClickListener(this);
 
         postTicketAPI = new PostTicketAPI(getContext(), this);
 
         return view;
+    }
+
+    private TextWatcher minuteTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            checkLabelsForEmptyValues();
+        }
+    };
+
+    private void checkLabelsForEmptyValues() {
+        String minutes = minuteLabel.getText().toString();
+
+        if (minutes.isEmpty())
+            acceptButton.setEnabled(false);
+        else
+            acceptButton.setEnabled(true);
     }
 
     @Override
@@ -75,9 +105,11 @@ public class BuyTicketFragment extends Fragment implements View.OnClickListener,
             return false;
         }
         DateTime now = DateTime.now();
+
+        DateTime start = parking.getStart();
         DateTime end = parking.getEnd();
 
-        if(end != null && now.isBefore(end.getMillis()))
+        if(now.isBefore(end.getMillis()) && now.isAfter(start.getMillis()))
             return true;
 
         return false;
@@ -117,7 +149,7 @@ public class BuyTicketFragment extends Fragment implements View.OnClickListener,
     @Override
     public void responseSuccess(AbstractAPI abstractAPI) {
         if(abstractAPI == this.postTicketAPI){
-            Toast.makeText(getContext(), "Added new ticket", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Dodano nowy bilet", Toast.LENGTH_LONG).show();
             getFragmentManager().popBackStack();
         }
     }
@@ -127,17 +159,17 @@ public class BuyTicketFragment extends Fragment implements View.OnClickListener,
         switch (abstractAPI.getResponseCode()) {
             case App.HTTP_401:
             case App.HTTP_403:
-                Toast.makeText(getContext(), "Unauthenticated", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Brak uprawnień", Toast.LENGTH_LONG).show();
                 break;
             case App.HTTP_406:
-                Toast.makeText(getContext(), "Not enough money", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Za mało pieniędzy", Toast.LENGTH_LONG).show();
                 break;
             case App.PARSE_ERROR:
-                Toast.makeText(getContext(), "Parse error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Błąd parsowania", Toast.LENGTH_LONG).show();
                 break;
             case App.CONNECTION_ERROR:
             default:
-                Toast.makeText(getContext(), "Connection error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Błąd połączenia", Toast.LENGTH_LONG).show();
                 break;
         }
     }

@@ -32,6 +32,8 @@ public class TypeUrlDialog extends DialogFragment implements View.OnClickListene
         String url = getURLFromSharedPref();
         if(url != null)
             typeURLLabel.setText(url);
+        else
+            typeURLLabel.setText("pateto.pythonanywhere.com");
 
         acceptButton = (Button) view.findViewById(R.id.accept_button);
         acceptButton.setOnClickListener(this);

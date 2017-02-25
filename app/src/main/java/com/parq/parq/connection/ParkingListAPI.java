@@ -61,7 +61,11 @@ public class ParkingListAPI extends AbstractAPI {
                                     DateTime start = DateTime.parse(open.getString("start"));
                                     start = start.withZone(DateTimeZone.getDefault());
                                     parking.setStart(start);
-                                    parking.setEnd(DateTime.parse(open.getString("end")));
+
+
+                                    DateTime end = DateTime.parse(open.getString("end"));
+                                    end = end.withZone(DateTimeZone.getDefault());
+                                    parking.setEnd(end);
                                 }
 
                                 getParkingList().add(parking);

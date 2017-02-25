@@ -124,9 +124,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void responseSuccess(AbstractAPI api) {
         if(this.loginAPI == api) {
             App.setToken(this.loginAPI.getToken());
-            //Intent intent = new Intent(this, MenuActivity.class);
-            //Intent intent = new Intent(this, MainActivity.class);
-            //startActivity(intent);
             profileAPI.requestProfile();
         } else if(api == this.profileAPI) {
             Profile profile = this.profileAPI.getProfile();
@@ -140,17 +137,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         switch(this.loginAPI.getResponseCode()){
             case App.HTTP_400:
-                Toast.makeText(this, "Bad login or password", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Zły login lub hasło", Toast.LENGTH_LONG).show();
                 break;
             case App.HTTP_403:
-                Toast.makeText(this, "Only drivers can login", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Tylko dla kierowców", Toast.LENGTH_SHORT).show();
                 break;
             case App.PARSE_ERROR:
-                Toast.makeText(this, "Parse error", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Błąd parsowania", Toast.LENGTH_LONG).show();
                 break;
             case App.CONNECTION_ERROR:
             default:
-                Toast.makeText(this, "Connection error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Błąd połączenia", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

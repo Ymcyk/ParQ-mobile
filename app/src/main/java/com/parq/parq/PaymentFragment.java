@@ -83,9 +83,6 @@ public class PaymentFragment extends Fragment implements APIResponse, View.OnCli
                     String paymentDetils = confirm.toJSONObject().toString(4);
                     Log.i("payment", paymentDetils);
                     sendPayment(paymentDetils);
-                    //startActivity(new Intent(this, ConfirmationActivity.class)
-                    //    .putExtra("PaymentResultJson", paymentDetils)
-                    //    .putExtra("PaymentAmount", paymentAmount));
                 } catch(JSONException e) {
                     Log.e("payment", "Error occurred on parsing: ", e);
                 }
@@ -119,12 +116,13 @@ public class PaymentFragment extends Fragment implements APIResponse, View.OnCli
     @Override
     public void responseSuccess(AbstractAPI abstractAPI) {
         if(this.api == abstractAPI) {
-            Profile profile = this.api.getProfile();
-            App.getProfile().setWallet(profile.getWallet());
+            //Profile profile = this.api.getProfile();
+            //App.getProfile().setWallet(profile.getWallet());
             getFragmentManager().popBackStack();
         } else if(this.postPaymentApi == abstractAPI) {
-            Toast.makeText(getContext(), "Payment success", Toast.LENGTH_LONG).show();
-            api.requestProfile();
+            Toast.makeText(getContext(), "Konto doładowane", Toast.LENGTH_LONG).show();
+            //api.requestProfile();
+            getFragmentManager().popBackStack();
         }
     }
 
@@ -133,14 +131,14 @@ public class PaymentFragment extends Fragment implements APIResponse, View.OnCli
         if(this.api == abstractAPI || this.postPaymentApi == abstractAPI){
             switch (this.api.getResponseCode()) {
                 case App.HTTP_401:
-                    Toast.makeText(getContext(), "Unauthenticated", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Brak uprawnień", Toast.LENGTH_LONG).show();
                     break;
                 case App.PARSE_ERROR:
-                    Toast.makeText(getContext(), "Parse error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Błąd parsowania", Toast.LENGTH_LONG).show();
                     break;
                 case App.CONNECTION_ERROR:
                 default:
-                    Toast.makeText(getContext(), "Connection error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Błąd połączenia", Toast.LENGTH_LONG).show();
                     break;
             }
         }

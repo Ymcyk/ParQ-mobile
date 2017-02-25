@@ -103,7 +103,7 @@ public class AddVehicleFragment extends Fragment implements View.OnClickListener
     @Override
     public void responseSuccess(AbstractAPI abstractAPI) {
         if(abstractAPI == this.api) {
-            Toast.makeText(getContext(), "Vehicle added", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Pojazd dodano", Toast.LENGTH_LONG).show();
             getFragmentManager().popBackStack();
         }
     }
@@ -114,14 +114,14 @@ public class AddVehicleFragment extends Fragment implements View.OnClickListener
             switch (abstractAPI.getResponseCode()) {
                 case App.HTTP_401:
                 case App.HTTP_403:
-                    Toast.makeText(getContext(), "Unauthenticated", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Brak uprawnień", Toast.LENGTH_LONG).show();
                     break;
                 case App.PARSE_ERROR:
-                    Toast.makeText(getContext(), "Parse error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Błąd parsowania", Toast.LENGTH_LONG).show();
                     break;
                 case App.CONNECTION_ERROR:
                 default:
-                    Toast.makeText(getContext(), "Connection error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Błąd połączenia", Toast.LENGTH_LONG).show();
                     break;
             }
         }

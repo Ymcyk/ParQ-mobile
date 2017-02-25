@@ -1,5 +1,6 @@
 package com.parq.parq;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -81,7 +82,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        Toast.makeText(this, "onCreateOptionsMenu", Toast.LENGTH_LONG).show();
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        Toast.makeText(this, "onOptionsItemSelected", Toast.LENGTH_LONG).show();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -126,7 +125,7 @@ public class MainActivity extends AppCompatActivity
                 fragName = PaymentFragment.class.toString();
                 break;
             case R.id.nav_logout:
-                Toast.makeText(this, "Wyloguj", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this, LoginActivity.class));
                 break;
         }
 
